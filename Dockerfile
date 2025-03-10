@@ -5,7 +5,10 @@ FROM node:lts-alpine AS build
 # Set config
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 ENV NPM_CONFIG_FUND=false
-ENV VITE_TESTING_SOMETHING=something
+ENV VITE_TESTING_SOMETHING='something'
+ENV VITE_EMAIL_TEMPLATE_ID='template_0inbwf3'
+ENV VITE_EMAIL_PUBLIC_KEY='XPwXLjTBqhog4y2iK'
+ENV VITE_EMAIL_SERVICE_ID='service_nbmus3r'
 
 # Create and change to the app directory.
 WORKDIR /app

@@ -38,6 +38,7 @@ const projects: Project[] = [
     image: "https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?auto=format&fit=crop&w=800&q=80",
     tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
     github: "https://github.com/David-Shibley",
+    demo: '/checkers',
     date: "2023",
     features: [
       "Complete checkers game logic implementation",
@@ -150,7 +151,7 @@ const frontendSkills: Skill[] = [
     color: "bg-orange-500" 
   },
   { 
-    name: "Jest/Jasmine/Enzyme", 
+    name: "Jest/Enzyme", 
     icon: <Code size={20} className="text-green-500" />, 
     level: 85,
     color: "bg-green-500" 
