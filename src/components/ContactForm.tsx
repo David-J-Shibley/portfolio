@@ -23,7 +23,7 @@ const ContactForm = () => {
       from_email: email,
       message: message,
     };
-    console.log('email', import.meta.env)
+    console.log('email', import.meta.env, process.env)
   
     try {
       await emailjs.send(
