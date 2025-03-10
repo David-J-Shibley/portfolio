@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle } from 'lucide-react';
+import emailjs from 'emailjs-com'
 
 import '../index.css'
 
@@ -8,20 +9,36 @@ const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const name = (e.target as HTMLFormElement)[0].value;
+    const email = (e.target as HTMLFormElement)[1].value;
+    const message = (e.target as HTMLFormElement)[2].value;
+  
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+  
+    const templateParams = {
+      to_email: "davidjshibley@gmail.com",
+      from_name: name,
+      from_email: email,
+      message: message,
+    };
+  
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAIL_SERVICE_ID || '', // Replace with your EmailJS Service ID
+        import.meta.env.VITE_EMAIL_TEMPLATE_ID || '', // Replace with your EmailJS Template ID
+        templateParams,
+        import.meta.env.VITE_EMAIL_PUBLIC_KEY || '' // Replace with your EmailJS Public Key
+      );
+  
       setIsSubmitted(true);
-      
-      // Reset form after 3 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 3000);
-    }, 1500);
+      setTimeout(() => setIsSubmitted(false), 3000);
+    } catch (error) {
+      console.error("Email sending failed:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
