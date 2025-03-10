@@ -20,7 +20,7 @@ const projects: Project[] = [
     image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
     tags: ["React", "JavaScript", "Material-UI", "SCSS"],
     github: "https://github.com/David-Shibley",
-    demo: "https://example.com",
+    demo: "https://david-shibley.github.io/",
     date: "2022",
     team: "Solo Project",
     features: [
@@ -54,7 +54,7 @@ const projects: Project[] = [
     image: "https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=800&q=80",
     tags: ["React", "JavaScript", "Material-UI", "SCSS"],
     github: "https://github.com/David-Shibley",
-    demo: "https://example.com",
+    demo: "https://royaloaksservices.github.io/",
     date: "2022",
     team: "Solo Project",
     features: [
@@ -105,8 +105,8 @@ const projects: Project[] = [
     longDescription: "Built an internal custom component library that was adopted by CA when they acquired Rally and made it their UI standard.",
     image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?auto=format&fit=crop&w=800&q=80",
     tags: ["JavaScript", "React", "HTML5", "CSS"],
-    github: "https://github.com/David-Shibley",
-    demo: "https://example.com",
+    github: "https://github.com/mineral-ui/mineral-ui",
+    demo: "https://mineral-ui.netlify.app/",
     date: "2016 - 2021",
     team: "Broadcom Team",
     features: [
