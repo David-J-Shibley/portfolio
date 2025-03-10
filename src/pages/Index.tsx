@@ -507,7 +507,7 @@ const Index = () => {
                 <Mail size={18} />
               </a>
               <a 
-                href="/resume.pdf" 
+                href="https://docs.google.com/document/d/e/2PACX-1vS0i6pHL3jLAW56qwn95zFynF8krNK76zoSI1H_wXbaGaH7OmAiQ4b_smwz6YJL-iwHJyxMZwmd4BN8/pub?format=pdf" 
                 download
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >

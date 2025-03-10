@@ -125,7 +125,7 @@ const ResumeSection = () => {
         <div className="flex items-center justify-between mb-8">
           <h3 className="heading-sm">Experience</h3>
           <motion.a
-            href="/resume.pdf"
+            href="https://docs.google.com/document/d/e/2PACX-1vS0i6pHL3jLAW56qwn95zFynF8krNK76zoSI1H_wXbaGaH7OmAiQ4b_smwz6YJL-iwHJyxMZwmd4BN8/pub?format=pdf"
             download
             className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors"
             whileHover={{ scale: 1.03 }}
