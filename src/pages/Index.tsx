@@ -10,6 +10,7 @@ import ResumeSection from '@/components/ResumeSection';
 import SoundCloudPlayer from '@/components/SoundcloudPlayer';
 import ContactForm from '@/components/ContactForm';
 import Logo from '@/components/Logo';
+import Drawings from '@/components/Drawings';
 
 const projects: Project[] = [
   {
@@ -236,6 +237,14 @@ const devopsSkills: Skill[] = [
   }
 ];
 
+const images = [
+    "https://res.cloudinary.com/dgodidozd/image/upload/v1741665967/Untitled_12_j58ub9.png",
+    "https://res.cloudinary.com/dgodidozd/image/upload/v1741665966/IMG_0052_npsjyv.png",
+    "https://res.cloudinary.com/dgodidozd/image/upload/v1741666186/Untitled_38_im8syy.png",
+    "https://res.cloudinary.com/dgodidozd/image/upload/v1741666187/Untitled_42_yqbnqh.png",
+    "https://res.cloudinary.com/dgodidozd/image/upload/v1741666186/Untitled_41_ouzuy3.png"
+  ];
+
 const tracks = [
   {
     id: "1",
@@ -458,6 +467,16 @@ const Index = () => {
           height={300}
           visual={true}
         />
+      </Section>
+
+      <Section id="drawings">
+        <SectionHeader
+            eyebrow="David's Drawings"
+            title="Pencil Drawings"
+            description="When not coding, or creating music, David likes to draw. Check out his latest drawings from Cloudinary."
+            />
+
+        <Drawings images={images} />
       </Section>
       
       {/* Contact Section */}

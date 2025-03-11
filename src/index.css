@@ -155,3 +155,108 @@
     @apply text-xs font-medium uppercase tracking-wide;
   }
 }
+
+.chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 2px solid #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chess-square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    user-select: none;
+    transition: background-color 0.2s;
+  }
+  
+  .chess-square.light {
+    background-color: theme('colors.chess.light-square');
+  }
+  
+  .chess-square.dark {
+    background-color: theme('colors.chess.dark-square');
+  }
+  
+  .chess-square.highlight {
+    background-color: theme('colors.chess.highlight');
+  }
+  
+  .chess-square.last-move {
+    background-color: theme('colors.chess.last-move');
+  }
+  
+  .chess-square.selected::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid rgba(255, 255, 0, 0.8);
+    pointer-events: none;
+  }
+  
+  .possible-move::before {
+    content: '';
+    width: 25%;
+    height: 25%;
+    border-radius: 50%;
+    background-color: theme('colors.chess.possible-move');
+    position: absolute;
+  }
+  
+  .chess-piece {
+    width: 80%;
+    height: 80%;
+    font-size: calc(min(6vw, 38px));
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .coordinate {
+    position: absolute;
+    font-size: 10px;
+    opacity: 0.8;
+    user-select: none;
+  }
+  
+  .coordinate.file {
+    bottom: 1px;
+    right: 3px;
+  }
+  
+  .coordinate.rank {
+    top: 1px;
+    left: 3px;
+  }
+  
+  .light-square .coordinate {
+    color: theme('colors.chess.dark-square');
+  }
+  
+  .dark-square .coordinate {
+    color: theme('colors.chess.light-square');
+  }
+  
+  @media (max-width: 640px) {
+    .chessboard {
+      max-width: 95vw;
+    }
+    
+    .chess-piece {
+      font-size: calc(min(11vw, 38px));
+    }
+    
+    .coordinate {
+      font-size: 8px;
+    }
+  }
+  
