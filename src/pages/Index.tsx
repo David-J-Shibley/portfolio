@@ -15,6 +15,40 @@ import Drawings from '@/components/Drawings';
 const projects: Project[] = [
   {
     id: "1",
+    title: "Chess",
+    description: "A game of checkers built with modern web technologies",
+    longDescription: "A fully functional checkers game with a clean UI, built using Vite, TypeScript, Motion for animations, and Tailwind CSS for styling.",
+    image: "https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?auto=format&fit=crop&w=800&q=80",
+    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
+    github: "https://github.com/David-Shibley",
+    demo: '/chess',
+    date: "2025",
+    features: [
+      "Complete checkers game logic implementation",
+      "Smooth animations with Motion",
+      "Responsive UI with Tailwind CSS",
+      "TypeScript for type safety and better developer experience"
+    ]
+  },
+  {
+    id: "2",
+    title: "Checkers",
+    description: "A game of checkers built with modern web technologies",
+    longDescription: "A fully functional checkers game with a clean UI, built using Vite, TypeScript, Motion for animations, and Tailwind CSS for styling.",
+    image: "https://www.chesshouse.com/cdn/shop/products/red-black-wood-checkers-set-28291362979927.jpg?v=1628162519&width=2048",
+    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
+    github: "https://github.com/David-Shibley",
+    demo: '/chess',
+    date: "2025",
+    features: [
+      "Complete checkers game logic implementation",
+      "Smooth animations with Motion",
+      "Responsive UI with Tailwind CSS",
+      "TypeScript for type safety and better developer experience"
+    ]
+  },
+  {
+    id: "3",
     title: "Daily Site Runner",
     description: "Conveniently opens sites you use everyday",
     longDescription: "A practical tool that helps you open your frequently visited websites with a single click, saving time and streamlining your daily workflow.",
@@ -32,24 +66,7 @@ const projects: Project[] = [
     ]
   },
   {
-    id: "2",
-    title: "Checkers",
-    description: "A game of checkers built with modern web technologies",
-    longDescription: "A fully functional checkers game with a clean UI, built using Vite, TypeScript, Motion for animations, and Tailwind CSS for styling.",
-    image: "https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?auto=format&fit=crop&w=800&q=80",
-    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
-    github: "https://github.com/David-Shibley",
-    demo: '/checkers',
-    date: "2023",
-    features: [
-      "Complete checkers game logic implementation",
-      "Smooth animations with Motion",
-      "Responsive UI with Tailwind CSS",
-      "TypeScript for type safety and better developer experience"
-    ]
-  },
-  {
-    id: "3",
+    id: "4",
     title: "Royal Oaks Services",
     description: "Volunteered to build a website for a non-profit organization",
     longDescription: "A website built for a non-profit organization to help them establish an online presence and better serve their community.",
@@ -67,7 +84,7 @@ const projects: Project[] = [
     ]
   },
   {
-    id: "4",
+    id: "5",
     title: "Enterprise Integrations & Shopify Fulfillment",
     description: "Lead engineer for GoPuff's platform as a service (PaaS) initiative",
     longDescription: "Converted GoPuff from an ecommerce site into a platform as a service, generating close to $150 million in the first year.",
@@ -76,28 +93,12 @@ const projects: Project[] = [
     github: "https://github.com/David-Shibley",
     date: "2021 - 2022",
     team: "Tech Lead (Team of 5)",
+    demo: "https://www.poweredbygopuff.com/pages/fulfillment",
     features: [
       "Custom OpenTelemetry implementation with Datadog for business insights",
       "Integration with major e-commerce platforms",
       "Shopify fulfillment application",
       "Real-time monitoring and alerts via PagerDuty"
-    ]
-  },
-  {
-    id: "5",
-    title: "Pharmacy Management System",
-    description: "HIPAA compliant solution for pharmacy management",
-    longDescription: "Built a HIPAA compliant solution to an unforeseen business requirement with a shippable product ready for use within ten days.",
-    image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=800&q=80",
-    tags: ["TypeScript", "React", "Redis", "SignalR", "C#/.NET", "Azure"],
-    github: "https://github.com/David-Shibley",
-    date: "2022",
-    team: "Lead Engineer",
-    features: [
-      "HIPAA compliant data handling with Redis cache",
-      "Real-time notifications via SignalR",
-      "Internal administration tools",
-      "Support for remote pharmacy management"
     ]
   },
   {

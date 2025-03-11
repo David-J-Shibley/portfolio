@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Github, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import ProjectModal from './ProjectModal';
 
 import '../index.css'
 
@@ -26,6 +27,7 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <motion.div
@@ -66,13 +68,13 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         <p className="body-md text-muted-foreground mb-4">{project.description}</p>
         
         <div className="flex items-center justify-between pt-2">
-          <motion.a
-            href={`#project-${project.id}`}
+          <motion.button
+            onClick={() => setShowModal(true)}
             className="flex items-center text-sm font-medium"
             whileHover={{ x: 5 }}
           >
             View details <ChevronRight size={16} className="ml-1" />
-          </motion.a>
+          </motion.button>
           
           <div className="flex gap-3">
             {project.github && (
@@ -100,6 +102,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           </div>
         </div>
       </div>
+      {showModal && <ProjectModal project={project} onClose={() => setShowModal(false)} />}
     </motion.div>
   );
 };
