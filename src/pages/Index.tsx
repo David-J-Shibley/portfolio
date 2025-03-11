@@ -277,9 +277,7 @@ const tracks = [
 
 const Index = () => {
   return (
-    <main className="bg-background relative overflow-hidden">
-      <Navigation />
-      
+    <main className="bg-background relative overflow-hidden">      
       {/* Hero Section */}
       <Section id="home" className="min-h-screen flex items-center pt-32 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">

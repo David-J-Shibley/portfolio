@@ -12,13 +12,14 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
-  { name: 'Home', href: '#home' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Resume', href: '#resume' },
-  { name: 'Music', href: '#music' },
-  { name: 'Drawings', href: '#drawings' },
-  { name: 'Contact', href: '#contact' }
+  { name: 'Home', href: '/#home' },
+  { name: 'Projects', href: '/#projects' },
+  { name: 'Games', href: '/games'},
+  { name: 'Skills', href: '/#skills' },
+  { name: 'Resume', href: '/#resume' },
+  { name: 'Music', href: '/#music' },
+  { name: 'Drawings', href: '/#drawings' },
+  { name: 'Contact', href: '/#contact' }
 ];
 
 const Navigation = () => {
