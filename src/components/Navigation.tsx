@@ -17,7 +17,8 @@ const navigationItems: NavigationItem[] = [
   { name: 'Skills', href: '#skills' },
   { name: 'Resume', href: '#resume' },
   { name: 'Music', href: '#music' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Drawings', href: '#drawings' },
+  { name: 'Contact', href: '#contact' }
 ];
 
 const Navigation = () => {
