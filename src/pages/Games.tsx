@@ -18,6 +18,11 @@ const games = [
         id: 3,
         title: 'Checkers',
         url: '/checkers'
+    },
+    {
+        id: 4,
+        title: 'Rock Paper Scissors',
+        url: '/rps'
     }
 ]
 
