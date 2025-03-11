@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { ChessPiece } from './ui/chess';
+import { ChessPiece } from '../../../components/ui/chess';
 import { cn } from '@/lib/utils';
 
 const ChessBoard = () => {

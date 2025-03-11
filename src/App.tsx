@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound";
 import Checkers from "./projects/checkers/pages";
 import Chess from "./projects/chess/pages"
+import Farkle from "./projects/farkle/pages"
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/checkers" element={<Checkers />} />
           <Route path="/chess" element={<Chess />} />
+          <Route path="/farkle" element={<Farkle />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

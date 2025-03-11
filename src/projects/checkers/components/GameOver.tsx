@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieceType } from '../types/game';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../../components/ui/dialog';
 import { Button } from './ui/button';
 import { Trophy, Crown, Star } from 'lucide-react';
 

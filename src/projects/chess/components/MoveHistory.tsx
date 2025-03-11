@@ -6,8 +6,8 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from './ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+} from '../../../components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 
 const MoveHistory = () => {
   const { gameState } = useGame();

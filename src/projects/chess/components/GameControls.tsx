@@ -1,5 +1,5 @@
-import { Button } from './ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../../components/ui/card';
 import { useGame } from '../context/GameContext';
 import { Shield, AlertTriangle } from 'lucide-react';
 

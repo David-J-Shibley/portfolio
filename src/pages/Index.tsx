@@ -38,7 +38,7 @@ const projects: Project[] = [
     image: "https://www.chesshouse.com/cdn/shop/products/red-black-wood-checkers-set-28291362979927.jpg?v=1628162519&width=2048",
     tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
     github: "https://github.com/David-Shibley",
-    demo: '/chess',
+    demo: '/checkers',
     date: "2025",
     features: [
       "Complete checkers game logic implementation",
@@ -46,9 +46,25 @@ const projects: Project[] = [
       "Responsive UI with Tailwind CSS",
       "TypeScript for type safety and better developer experience"
     ]
+  },  {
+    id: "3",
+    title: "Farkle",
+    description: "An implementation of the game Farkle",
+    longDescription: "Built a simple interpretation of the game Farkle.",
+    image: "https://imgs.michaels.com/MAM/assets/1/5E3C12034D34434F8A9BAAFDDF0F8E1B/img/9B3D02DD8E294806A6E654C783147154/D327701S_1.jpg",
+    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
+    github: "https://github.com/David-Shibley",
+    demo: "/farkle",
+    date: "2025",
+    features: [
+      "Comprehensive set of reusable UI components",
+      "Consistent design language across applications",
+      "Accessibility compliance",
+      "Extensive documentation and examples"
+    ]
   },
   {
-    id: "3",
+    id: "4",
     title: "Daily Site Runner",
     description: "Conveniently opens sites you use everyday",
     longDescription: "A practical tool that helps you open your frequently visited websites with a single click, saving time and streamlining your daily workflow.",
@@ -66,7 +82,7 @@ const projects: Project[] = [
     ]
   },
   {
-    id: "4",
+    id: "5",
     title: "Royal Oaks Services",
     description: "Volunteered to build a website for a non-profit organization",
     longDescription: "A website built for a non-profit organization to help them establish an online presence and better serve their community.",
@@ -84,7 +100,7 @@ const projects: Project[] = [
     ]
   },
   {
-    id: "5",
+    id: "6",
     title: "Enterprise Integrations & Shopify Fulfillment",
     description: "Lead engineer for GoPuff's platform as a service (PaaS) initiative",
     longDescription: "Converted GoPuff from an ecommerce site into a platform as a service, generating close to $150 million in the first year.",
@@ -100,25 +116,7 @@ const projects: Project[] = [
       "Shopify fulfillment application",
       "Real-time monitoring and alerts via PagerDuty"
     ]
-  },
-  {
-    id: "6",
-    title: "MineralUI Component Library",
-    description: "Reusable React component library that became CA's UI standard",
-    longDescription: "Built an internal custom component library that was adopted by CA when they acquired Rally and made it their UI standard.",
-    image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?auto=format&fit=crop&w=800&q=80",
-    tags: ["JavaScript", "React", "HTML5", "CSS"],
-    github: "https://github.com/mineral-ui/mineral-ui",
-    demo: "https://mineral-ui.netlify.app/",
-    date: "2016 - 2021",
-    team: "Broadcom Team",
-    features: [
-      "Comprehensive set of reusable UI components",
-      "Consistent design language across applications",
-      "Accessibility compliance",
-      "Extensive documentation and examples"
-    ]
-  },
+  }
 ];
 
 const frontendSkills: Skill[] = [

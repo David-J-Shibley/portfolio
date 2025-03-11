@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { GameState, Move, ChessPiece, createNewGame, isValidMove } from '../components/ui/chess';
+import { GameState, Move, ChessPiece, createNewGame, isValidMove } from '../../../components/ui/chess';
 import { useToast } from '@/components/ui/use-toast';
 
 type GameContextType = {
@@ -107,8 +107,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (!wouldMoveLeadToCheck(from, to, playerColor)) {
             // Found at least one move that can get out of check
             return false;
-          } else {
-            return true
           }
         }
       }
