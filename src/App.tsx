@@ -11,6 +11,8 @@ import Games from "./pages/Games.tsx"
 import Checkers from "./projects/checkers/pages";
 import Chess from "./projects/chess/pages"
 import Farkle from "./projects/farkle/pages"
+import Hangman from "./projects/hangman/src/pages";
+import Memory from "./projects/memory/pages"
 import RPS from "./projects/rps/pages"
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/checkers" element={<Checkers />} />
           <Route path="/chess" element={<Chess />} />
           <Route path="/farkle" element={<Farkle />} />
+          <Route path="/hangman" element={<Hangman />} />
+          <Route path="memory" element={<Memory />} />
           <Route path="rps" element={<RPS />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -11,16 +11,26 @@ const games = [
     },
     {
         id: 2,
-        title: 'Chess',
-        url: '/chess'
-    },
-    {
-        id: 3,
         title: 'Checkers',
         url: '/checkers'
     },
     {
+        id: 3,
+        title: 'Chess',
+        url: '/chess'
+    },
+    {
         id: 4,
+        title: 'Hangman',
+        url: '/hangman'
+    },
+    {
+        id: 5,
+        title: 'Memory Matcher',
+        url: '/memory'
+    },
+    {
+        id: 6,
         title: 'Rock Paper Scissors',
         url: '/rps'
     }

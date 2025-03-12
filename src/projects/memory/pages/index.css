@@ -1,0 +1,25 @@
+.perspective {
+    perspective: 1000px;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  
+  .card-inner {
+    transform-style: preserve-3d;
+  }
+  
+  .card-back, .card-front {
+    backface-visibility: hidden;
+  }
+  
+  .card-front {
+    transform: rotateY(180deg);
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
