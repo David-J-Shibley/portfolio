@@ -38,6 +38,11 @@ const games = [
         id: 7,
         title: 'Snake',
         url: '/snake'
+    },
+    {
+        id: 8,
+        title: 'Frogger',
+        url: '/frogger'
     }
 ]
 
