@@ -143,6 +143,15 @@ export default {
 				'400': '400ms',
 				'600': '600ms',
 			},
+            snake: {
+                body: '#8B5CF6',
+                head: '#D946EF',
+                food: '#F97316'
+            },
+            game: {
+                background: '#1A1F2C',
+                grid: '#2A2F3C'
+            }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

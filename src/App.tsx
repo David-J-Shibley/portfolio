@@ -14,6 +14,7 @@ import Farkle from "./projects/farkle/pages"
 import Hangman from "./projects/hangman/src/pages";
 import Memory from "./projects/memory/pages"
 import RPS from "./projects/rps/pages"
+import Snake from "./projects/snake/pages"
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/farkle" element={<Farkle />} />
           <Route path="/hangman" element={<Hangman />} />
           <Route path="memory" element={<Memory />} />
+          <Route path="snake" element={<Snake />} />
           <Route path="rps" element={<RPS />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

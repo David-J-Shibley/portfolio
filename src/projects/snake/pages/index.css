@@ -1,0 +1,32 @@
+.game-grid {
+    display: grid;
+    gap: 1px;
+    border-radius: 0.5rem;
+    background-color: blueviolet;
+    overflow: hidden;
+  }
+
+  .snake-cell {
+    border-radius: 2px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .controls-btn {
+    min-width: 50px;
+    min-height: 50px;
+  }
+
+.bg-snake-body {
+    background-color: #8B5CF6;
+}
+.bg-snake-head {
+    background-color: #D946EF;
+}
+.bg-snake-food {
+    background-color: #F97316;
+}
+.game-grid {
+    background-color: #1A1F2C;
+    grid: #2A2F3C
+}
