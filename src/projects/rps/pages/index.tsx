@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGame, GameProvider } from '../context/GameContext';
+import { useGame } from '../context/GameContext';
 import { Choice } from '../types/game';
 import GameCard from '../components/GameCard';
 import ScoreBoard from '../components/ScoreBoard';
@@ -85,7 +85,6 @@ const Index = () => {
   }, []);
 
   return (
-    <GameProvider>
     <Layout>
       <div className="container mx-auto px-4 py-8 md:py-0">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -191,7 +190,6 @@ const Index = () => {
         </div>
       </div>
     </Layout>
-    </GameProvider>
   );
 };
 

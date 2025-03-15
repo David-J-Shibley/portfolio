@@ -16,6 +16,9 @@ import Memory from "./projects/memory/pages"
 import RPS from "./projects/rps/pages"
 import Snake from "./projects/snake/pages"
 import Frogger from "./projects/frogger/pages"
+import Dominion from "./projects/dominion/pages"
+import Invaders from "./projects/invaders/pages"
+import Monopoly from "./projects/monopoly/pages"
 
 const queryClient = new QueryClient();
 
@@ -32,10 +35,13 @@ const App = () => (
           <Route path="/games" element={<Games />} />
           <Route path="/checkers" element={<Checkers />} />
           <Route path="/chess" element={<Chess />} />
+          <Route path="/dominion" element={<Dominion />} />
           <Route path="/farkle" element={<Farkle />} />
           <Route path="/frogger" element={<Frogger />} />
           <Route path="/hangman" element={<Hangman />} />
+          <Route path="/invaders" element={<Invaders />} />
           <Route path="/memory" element={<Memory />} />
+          <Route path="/monopoly" element={<Monopoly />} />
           <Route path="/snake" element={<Snake />} />
           <Route path="/rps" element={<RPS />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

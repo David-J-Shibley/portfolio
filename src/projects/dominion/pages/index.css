@@ -1,0 +1,85 @@
+  .card {
+    padding: 2em;
+  }
+    
+    /* Card styling */
+    .card-container {
+      perspective: 1000px;
+      border: 1px solid black;
+      color: black;
+      transform-style: preserve-3d;
+      background-color: grey;
+    }
+    
+    .card-front {
+        transform: none;
+    }
+
+    .card-front, .card-back {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bg-curse {
+        background-color: purple;
+    }
+    
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    
+    .card-flipped .card-front {
+      transform: rotateY(180deg);
+    }
+    
+    .card-flipped .card-back {
+      transform: rotateY(0);
+    }
+    
+    /* Game area styling */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+      .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+    
+    /* Card draw animation variants */
+    .card-draw-1 {
+      animation-delay: 0.05s;
+    }
+    .card-draw-2 {
+      animation-delay: 0.1s;
+    }
+    .card-draw-3 {
+      animation-delay: 0.15s;
+    }
+    .card-draw-4 {
+      animation-delay: 0.2s;
+    }
+    .card-draw-5 {
+      animation-delay: 0.25s;
+    }
+  
+  
+  /* Hide scrollbar but keep functionality */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }

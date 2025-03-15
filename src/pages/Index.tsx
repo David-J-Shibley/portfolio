@@ -11,6 +11,7 @@ import SoundCloudPlayer from '@/components/SoundcloudPlayer';
 import ContactForm from '@/components/ContactForm';
 import Logo from '@/components/Logo';
 import Drawings from '@/components/Drawings';
+import { Button } from '@/components/ui/button';
 
 const projects: Project[] = [
   {
@@ -244,37 +245,6 @@ const images = [
     "https://res.cloudinary.com/dgodidozd/image/upload/v1741666186/Untitled_41_ouzuy3.png"
   ];
 
-const tracks = [
-  {
-    id: "1",
-    title: "Dream Sequence",
-    artist: "a_udio-i_llusion",
-    artwork: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80",
-    soundCloudUrl: "https://soundcloud.com/a_udio-i_llusion",
-  },
-  {
-    id: "2",
-    title: "Urban Rhythm",
-    artist: "a_udio-i_llusion",
-    artwork: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80",
-    soundCloudUrl: "https://soundcloud.com/a_udio-i_llusion",
-  },
-  {
-    id: "3",
-    title: "Electronic Waves",
-    artist: "a_udio-i_llusion",
-    artwork: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80",
-    soundCloudUrl: "https://soundcloud.com/a_udio-i_llusion",
-  },
-  {
-    id: "4",
-    title: "Sunset Vibes",
-    artist: "a_udio-i_llusion",
-    artwork: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80",
-    soundCloudUrl: "https://soundcloud.com/a_udio-i_llusion",
-  },
-];
-
 const Index = () => {
   return (
     <main className="bg-background relative overflow-hidden">      
@@ -393,6 +363,10 @@ const Index = () => {
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
+      </Section>
+      <Section id='games'>
+        <SectionHeader eyebrow='My Work continued' title='Games' description='A list of games I built' />
+        <motion.a href='/games'><Button>See Games</Button></motion.a>
       </Section>
       
       {/* Skills Section */}

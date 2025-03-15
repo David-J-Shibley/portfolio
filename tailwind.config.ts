@@ -151,7 +151,7 @@ export default {
             game: {
                 background: '#1A1F2C',
                 grid: '#2A2F3C'
-            }
+            },
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
