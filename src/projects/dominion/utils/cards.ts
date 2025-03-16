@@ -199,15 +199,16 @@ export const REMODEL: Card = {
   url: 'https://wiki.dominionstrategy.com/images/thumb/2/2e/Remodel.jpg/1200px-Remodel.jpg'
 };
 
-// export const MILITIA: Card = {
-//   id: 'militia',
-//   name: 'Militia',
-//   type: 'Action',
-//   cost: 4,
-//   description: '+2 Coins. Each other player discards down to 3 cards in hand.',
-//   coins: 2,
-//   effects: ['attack:discardDownTo:3'],
-// };
+export const MILITIA: Card = {
+  id: 'militia',
+  name: 'Militia',
+  type: 'Action',
+  cost: 4,
+  description: '+2 Coins. Each other player discards down to 3 cards in hand.',
+  coins: 2,
+  effects: ['attack:discardDownTo:3'],
+  url: 'https://wiki.dominionstrategy.com/images/thumb/a/a0/Militia.jpg/800px-Militia.jpg'
+};
 
 // export const MINE: Card = {
 //   id: 'mine',
@@ -292,15 +293,15 @@ export const REMODEL: Card = {
 //   effects: ['revealUntilTreasure:2'],
 // };
 
-export const BLACKSMITH: Card = {
-  name: "Blacksmith",
-  id: 'blacksmith',
-  description: 'Draw 3 cards',
-  cost: 4,
-  type: "Action",
-  cards: 3,
-  url: 'https://wiki.dominionstrategy.com/images/thumb/e/eb/Blacksmith.jpg/1200px-Blacksmith.jpg'
-}
+// export const BLACKSMITH: Card = {
+//   name: "Blacksmith",
+//   id: 'blacksmith',
+//   description: 'Draw 3 cards',
+//   cost: 4,
+//   type: "Action",
+//   cards: 3,
+//   url: 'https://wiki.dominionstrategy.com/images/thumb/e/eb/Blacksmith.jpg/1200px-Blacksmith.jpg'
+// }
 
 // export const TAX_COLLECTOR: Card = {
 //   name: "Tax Collector",
@@ -315,7 +316,7 @@ export const BLACKSMITH: Card = {
 // All kingdom cards for selection
 export const KINGDOM_CARDS = [
   VILLAGE, SMITHY, MARKET, FESTIVAL, LABORATORY, 
-  WITCH, CHAPEL, CELLAR, MOAT, REMODEL, BLACKSMITH
+  WITCH, CHAPEL, CELLAR, MOAT, REMODEL, MILITIA
 ];
 
 // All cards
@@ -327,15 +328,23 @@ export const ALL_CARDS = [
 
 // Find a card by ID
 export const getCardById = (id: string): Card | undefined => {
-  return ALL_CARDS.find(card => card.id === id);
+  return ALL_CARDS.find(card => card.id.includes(id));
 };
 
 // Create initial deck (7 Copper, 3 Estate)
 export const createInitialDeck = (): Card[] => {
-  return [
-    ...Array(7).fill(COPPER),
-    ...Array(3).fill(ESTATE)
-  ];
+  const deck = []
+  let numberOfCoppers = 7
+  let numberOfEstates = 3
+  while (numberOfCoppers > 0) {
+    deck.push({ ...COPPER, id: getId(COPPER.id)})
+    numberOfCoppers--
+  }
+  while (numberOfEstates > 0) {
+    deck.push({ ...ESTATE, id: getId(ESTATE.id)})
+    numberOfEstates--
+  }
+  return deck;
 };
 
 // Get the color class for a card type
@@ -355,6 +364,10 @@ export interface SupplyPile {
   count: number;
 }
 
+const getId = (name: string) => {
+  return `${name}-${Math.random()}`
+} 
+
 export const createInitialSupply = (playerCount: number = 2): SupplyPile[] => {
   // Base cards
   const baseCards = [
@@ -372,7 +385,7 @@ export const createInitialSupply = (playerCount: number = 2): SupplyPile[] => {
   const selected = shuffled.slice(0, 10);
   
   const kingdomCards = selected.map(card => ({
-    card,
+    card: { ...card, id: getId(card.id)},
     count: 10
   }));
   

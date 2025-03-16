@@ -134,6 +134,14 @@ const scoreActionCard = (card: Card, gameState: GameState): number => {
 const scoreBuyCard = (pile: SupplyPile, availableCoins: number, gameState: GameState): number => {
   const card = pile.card;
   let score = 0;
+  if (card.id === 'curse' || card.id === 'copper') {
+    return -9999; // Never buy a Curse or Copper
+  }
+
+  if (card.type === 'Action') {
+    const count = countCardInDeck(gameState, card.id);
+    if (count >= 2) score -= count * 2; // Stronger penalty for too many of the same action
+  }
   
   // Early game strategy (turns 1-5)
   if (gameState.turnNumber <= 5) {
@@ -202,10 +210,18 @@ const scoreBuyCard = (pile: SupplyPile, availableCoins: number, gameState: GameS
     const count = countCardInDeck(gameState, card.id);
     if (count >= 2) score -= count;
   }
+
+  if (card.id === 'estate' && gameState.turnNumber >= 18) {
+    if (gameState.players[gameState.currentPlayerIndex].coins < 2) {
+      score += 2; // Only buy Estate as a last resort if you can't afford anything else
+    } else {
+      score -= 5; // Otherwise, avoid it
+    }
+  }
   
   // Random factor to make AI less predictable
   score += Math.random() * 2 - 1;
-  
+  console.log('Scored card: ', score, card)
   return score;
 };
 

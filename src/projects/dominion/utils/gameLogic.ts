@@ -1,3 +1,4 @@
+import { useGame } from '../context/GameContext';
 import { 
   Card, SupplyPile, createInitialDeck, createInitialSupply, getCardById, 
   COPPER, PROVINCE, CURSE 
@@ -14,6 +15,9 @@ export interface Player {
   buys: number;
   coins: number;
   isBot?: boolean;
+  pendingDiscards: number;
+  onDiscardComplete: null | ((cards: Card[]) => void)
+  pendingDiscardForCellar: boolean;
 }
 
 export type GamePhase = 'setup' | 'action' | 'buy' | 'cleanup' | 'gameOver';
@@ -33,6 +37,7 @@ export interface GameState {
   selectionMessage: string;
   gameOver: boolean;
   lastAiMoveTimestamp?: number;
+  lastAction: string;
 }
 
 // Shuffle function
@@ -58,6 +63,9 @@ export const initializeGame = (playerName: string, withBot: boolean): GameState 
       actions: 0,
       buys: 0,
       coins: 0,
+      pendingDiscards: 0,
+      onDiscardComplete: () => {},
+      pendingDiscardForCellar: false,
     }
   ];
 
@@ -73,6 +81,9 @@ export const initializeGame = (playerName: string, withBot: boolean): GameState 
       buys: 0,
       coins: 0,
       isBot: true,
+      pendingDiscards: 0,
+      onDiscardComplete: () => {},
+      pendingDiscardForCellar: false,
     });
   }
 
@@ -90,6 +101,7 @@ export const initializeGame = (playerName: string, withBot: boolean): GameState 
     selectionType: 'none',
     selectionMessage: '',
     gameOver: false,
+    lastAction: '',
   };
 
   for (const player of gameState.players) {
@@ -106,8 +118,9 @@ export const initializeGame = (playerName: string, withBot: boolean): GameState 
 };
 
 // Draw cards function
-export const drawCards = (gameState: GameState, playerId: string, count: number): void => {
+export const drawCards = (gameState: GameState, playerId: string, count: number, updatePlayer = (player: Player) => {}): void => {
   const player = gameState.players.find(p => p.id === playerId);
+
   if (!player) return;
 
   for (let i = 0; i < count; i++) {
@@ -120,6 +133,8 @@ export const drawCards = (gameState: GameState, playerId: string, count: number)
 
     const card = player.deck.pop()!;
     player.hand.push(card);
+    console.log('Hand', player.hand, card)
+    updatePlayer(player)
   }
 };
 
@@ -141,7 +156,13 @@ export const playCard = (gameState: GameState, playerId: string, cardIndex: numb
     if (card.actions) player.actions += card.actions;
     if (card.buys) player.buys += card.buys;
     if (card.coins) player.coins += card.coins;
-
+    if (card.id === 'militia') {
+      applyMilitiaEffect(gameState, playerId);
+    }
+    if (card.id.includes('cellar')) {
+      console.log('Cellar')
+      player.pendingDiscardForCellar = true; // Flag to show discard UI
+    }
     if (card.effects) handleSpecialEffects(gameState, player.id, card.effects);
   } else if (card.type === 'Treasure') {
     if (card.value) player.coins += card.value;
@@ -189,6 +210,11 @@ export const handleSpecialEffects = (gameState: GameState, playerId: string, eff
   }
 };
 
+const getId = (name: string) => {
+  return `${name}-${Math.random()}`
+} 
+
+
 // Buy a card
 export const buyCard = (gameState: GameState, playerId: string, supplyIndex: number): void => {
   const player = gameState.players.find(p => p.id === playerId);
@@ -200,7 +226,7 @@ export const buyCard = (gameState: GameState, playerId: string, supplyIndex: num
 
   player.buys--;
   player.coins -= pile.card.cost;
-  player.discard.push(pile.card);
+  player.discard.push({ ...pile.card, id: getId(pile.card.id)});
   pile.count--;
 
   gameState.log.push(`${player.name} bought ${pile.card.name}`);
@@ -292,4 +318,111 @@ export const moveToBuyPhase = (gameState: GameState): void => {
   });
   
   gameState.log.push(`Buy phase started, ${player.coins} coins available`);
+};
+
+// Militia's effect: Other players discard down to 3 cards in hand
+const applyMilitiaEffect = (gameState: GameState, attackerId: string): void => {
+  gameState.players.forEach(player => {
+    if (player.id !== attackerId && player.hand.length > 3) {
+      const numToDiscard = player.hand.length - 3;
+      discardCards(player, numToDiscard);
+    }
+  });
+};
+
+// Discard helper function
+const discardCards = (player: Player, numToDiscard: number) => {
+  while (numToDiscard > 0 && player.hand.length > 0) {
+    const discardedCard = player.hand.pop(); // AI could choose a better strategy here
+
+    if (discardedCard) {
+      player.discard.push(discardedCard);
+    }
+    numToDiscard--;
+  }
+};
+
+
+// Function to prompt the user to discard cards
+export const promptPlayerToDiscard = (
+  player: Player,
+  numToDiscard: number,
+  onComplete: (selectedCards: Card[]) => void
+) => {
+  // Trigger UI prompt for the player
+  if (player.isBot) {
+    // If AI, discard lowest-value cards automatically
+    const discardedCards = player.hand
+      .sort((a, b) => evaluateCardValue(a) - evaluateCardValue(b))
+      .slice(0, numToDiscard);
+
+    discardedCards.forEach(card => {
+      player.hand = player.hand.filter(c => c !== card);
+      player.discard.push(card);
+    });
+
+    onComplete(discardedCards);
+  } else {
+    // If human, the UI should handle the card selection
+    player.pendingDiscards = numToDiscard; // Store how many cards they need to discard
+    player.onDiscardComplete = onComplete; // Callback when selection is done
+  }
+};
+
+// Called when the player selects cards in the UI
+export const completeDiscardSelection = (player: Player, selectedCards: Card[]) => {
+  if (selectedCards.length !== player.pendingDiscards) {
+    console.error(`Player must discard exactly ${player.pendingDiscards} cards.`);
+    return;
+  }
+
+  selectedCards.forEach(card => {
+    player.hand = player.hand.filter(c => c !== card);
+    player.discard.push(card);
+  });
+
+  // Run the completion callback
+  if (player.onDiscardComplete) {
+    player.onDiscardComplete(selectedCards);
+  }
+
+  // Clear discard state
+  player.pendingDiscards = 0;
+  player.onDiscardComplete = null;
+};
+
+// Utility function for AI to evaluate card discard priority
+const evaluateCardValue = (card: Card): number => {
+  if (card.type === 'Victory') return -5; // Victory cards are dead draws early
+  if (card.type === 'Treasure') return 10; // Treasure is valuable
+  if (card.type === 'Action') return 7; // Actions are useful but situational
+  return 0;
+};
+
+export const playCellar = (gameState: GameState, playerId: string, selectedCards: Card[]) => {
+  const player = gameState.players.find(p => p.id === playerId);
+  if (!player) return;
+
+  // Step 1: Remove selected cards from hand and add to discard pile
+  player.hand = player.hand.filter(card => !selectedCards.includes(card));
+  player.discard.push(...selectedCards);
+
+  // Step 2: Draw that many new cards
+  const numToDraw = selectedCards.length;
+  for (let i = 0; i < numToDraw; i++) {
+    if (player.deck.length === 0) {
+      // If deck is empty, shuffle discard pile into deck
+      player.deck = shuffle(player.discard);
+      player.discard = [];
+    }
+    if (player.deck.length > 0) {
+      player.hand.push(player.deck.pop()!);
+    }
+  }
+
+  // Step 3: Grant +1 Action
+  player.actions += 1;
+
+  // Update game state
+  gameState.lastAction = `Cellar: Discarded ${selectedCards.length} cards, drew ${numToDraw}.`;
 };

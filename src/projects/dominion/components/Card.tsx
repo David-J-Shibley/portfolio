@@ -40,8 +40,6 @@ const Card = ({
   };
 
   // Card type color classes
-  const colorClass = getCardColorClass(card.type);
- console.log('url', card.url)
   return (
     <div 
       className={cn(

@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import { Card, SupplyPile } from '../utils/cards';
-import { GameState, initializeGame, playCard, buyCard, moveToBuyPhase, endTurn, getCurrentPlayer } from '../utils/gameLogic';
+import { GameState, initializeGame, playCard, buyCard, moveToBuyPhase, endTurn, getCurrentPlayer, Player } from '../utils/gameLogic';
 import { executeAiTurn, shouldAiMove } from '../utils/ai';
 
 // Action types for reducer
 type GameAction = 
   | { type: 'START_GAME'; playerName: string; withBot: boolean }
   | { type: 'PLAY_CARD'; index: number }
+  | { type: 'PLAYER', player: Player }
   | { type: 'BUY_CARD'; index: number }
   | { type: 'MOVE_TO_BUY_PHASE' }
   | { type: 'END_TURN' }
@@ -20,6 +21,7 @@ interface GameContextType {
   dispatch: React.Dispatch<GameAction>;
   startGame: (playerName: string, withBot: boolean) => void;
   playCardFromHand: (index: number) => void;
+  updatePlayer: (player: Player) => void
   buyCardFromSupply: (index: number) => void;
   moveToNextPhase: () => void;
   selectCard: (card: Card) => void;
@@ -35,6 +37,7 @@ const GameContext = createContext<GameContextType>({
   dispatch: () => {},
   startGame: () => {},
   playCardFromHand: () => {},
+  updatePlayer: () => {},
   buyCardFromSupply: () => {},
   moveToNextPhase: () => {},
   selectCard: () => {},
@@ -94,6 +97,12 @@ const gameReducer = (state: GameState | null, action: GameAction): GameState | n
         ...state,
         selectedPile: action.pile
       };
+
+    case 'PLAYER':
+      if (!state) return null;
+      return {
+        ...state,
+      }
       
     case 'AI_MOVE':
       if (!state) return null;
@@ -131,6 +140,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     dispatch({ type: 'START_GAME', playerName, withBot });
   };
 
+  const updatePlayer = (player: Player) => {
+    dispatch({ type: 'PLAYER', player })
+  }
+
   const playCardFromHand = (index: number) => {
     dispatch({ type: 'PLAY_CARD', index });
   };
@@ -162,6 +175,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         dispatch,
         startGame,
         playCardFromHand,
+        updatePlayer,
         buyCardFromSupply,
         moveToNextPhase,
         selectCard,

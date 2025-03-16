@@ -83,3 +83,26 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.2);
   }
+
+  .discard-prompt {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 20px;
+    border: 2px solid black;
+    text-align: center;
+  }
+  
+  .card-button {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid gray;
+    cursor: pointer;
+  }
+  
+  .card.selected {
+    background-color: red;
+    color: white;
+  }
