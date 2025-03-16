@@ -19,6 +19,8 @@ import Frogger from "./projects/frogger/pages"
 import Dominion from "./projects/dominion/pages"
 import Invaders from "./projects/invaders/pages"
 import Monopoly from "./projects/monopoly/pages"
+import TicTacToe from "./projects/tic_tack_toe/pages"
+import EtherealQuest from "./projects/ethereal_quest/pages"
 
 const queryClient = new QueryClient();
 
@@ -36,14 +38,16 @@ const App = () => (
           <Route path="/checkers" element={<Checkers />} />
           <Route path="/chess" element={<Chess />} />
           <Route path="/dominion" element={<Dominion />} />
+          <Route path="/eq" element={<EtherealQuest />} />
           <Route path="/farkle" element={<Farkle />} />
           <Route path="/frogger" element={<Frogger />} />
           <Route path="/hangman" element={<Hangman />} />
           <Route path="/invaders" element={<Invaders />} />
           <Route path="/memory" element={<Memory />} />
           <Route path="/monopoly" element={<Monopoly />} />
-          <Route path="/snake" element={<Snake />} />
           <Route path="/rps" element={<RPS />} />
+          <Route path="/snake" element={<Snake />} />
+          <Route path="/ttt" element={<TicTacToe />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

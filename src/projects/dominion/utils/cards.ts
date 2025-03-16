@@ -157,15 +157,15 @@ export const WITCH: Card = {
   url: 'https://wiki.dominionstrategy.com/images/thumb/f/f3/Witch.jpg/1200px-Witch.jpg'
 };
 
-export const CHAPEL: Card = {
-  id: 'chapel',
-  name: 'Chapel',
-  type: 'Action',
-  cost: 2,
-  description: 'Trash up to 4 cards from your hand.',
-  effects: ['trashFromHand:4'],
-  url: 'https://wiki.dominionstrategy.com/images/thumb/2/29/Chapel.jpg/1200px-Chapel.jpg'
-};
+// export const CHAPEL: Card = {
+//   id: 'chapel',
+//   name: 'Chapel',
+//   type: 'Action',
+//   cost: 2,
+//   description: 'Trash up to 4 cards from your hand.',
+//   effects: ['trashFromHand:4'],
+//   url: 'https://wiki.dominionstrategy.com/images/thumb/2/29/Chapel.jpg/1200px-Chapel.jpg'
+// };
 
 export const CELLAR: Card = {
   id: 'cellar',
@@ -189,15 +189,15 @@ export const MOAT: Card = {
   url: 'https://wiki.dominionstrategy.com/images/thumb/f/fe/Moat.jpg/1200px-Moat.jpg'
 };
 
-export const REMODEL: Card = {
-  id: 'remodel',
-  name: 'Remodel',
-  type: 'Action',
-  cost: 4,
-  description: 'Trash a card from your hand. Gain a card costing up to 2 more than it.',
-  effects: ['trashAndGain:2'],
-  url: 'https://wiki.dominionstrategy.com/images/thumb/2/2e/Remodel.jpg/1200px-Remodel.jpg'
-};
+// export const REMODEL: Card = {
+//   id: 'remodel',
+//   name: 'Remodel',
+//   type: 'Action',
+//   cost: 4,
+//   description: 'Trash a card from your hand. Gain a card costing up to 2 more than it.',
+//   effects: ['trashAndGain:2'],
+//   url: 'https://wiki.dominionstrategy.com/images/thumb/2/2e/Remodel.jpg/1200px-Remodel.jpg'
+// };
 
 export const MILITIA: Card = {
   id: 'militia',
@@ -316,7 +316,7 @@ export const MILITIA: Card = {
 // All kingdom cards for selection
 export const KINGDOM_CARDS = [
   VILLAGE, SMITHY, MARKET, FESTIVAL, LABORATORY, 
-  WITCH, CHAPEL, CELLAR, MOAT, REMODEL, MILITIA
+  WITCH, CELLAR, MOAT, MILITIA
 ];
 
 // All cards

@@ -40,6 +40,11 @@ const games = [
     url: "/rps",
   },
   {
+    id: 10,
+    title: 'Tic Tac Toe',
+    url: '/ttt'
+  },
+  {
     id: 7,
     title: "Snake",
     url: "/snake",
