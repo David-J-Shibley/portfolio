@@ -507,7 +507,6 @@ import {
   
   export const createNewCharacter = (name: string, characterClass: CharacterClass): Character => {
     const classDetails = characterClasses[characterClass];
-    console.log('Creating new character')
     
     return {
       id: crypto.randomUUID(),

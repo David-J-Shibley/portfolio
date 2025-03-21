@@ -54,6 +54,16 @@ const games = [
     title: "Frogger",
     url: "/frogger",
   },
+  {
+    id: 11,
+    title: "Asteroids",
+    url: "/asteroids"
+  },
+  {
+    id: 12,
+    title: "Code Challenge",
+    url: "/code_challenge"
+  }
 ];
 
 const GamesList: React.FC = () => {
@@ -61,8 +71,8 @@ const GamesList: React.FC = () => {
     <div className="games-list">
       <h2 className="games-list-title">Games</h2>
       <ul className="games-list-container">
-        {games.map((game) => (
-          <Link to={game.url}>
+        {games.map((game, index) => (
+          <Link key={index} to={game.url}>
             <li key={game.id} className="game-item">
               <h3 className="game-title">{game.title}</h3>
               <p className="game-link">Play {game.title}</p>

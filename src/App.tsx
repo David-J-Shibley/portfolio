@@ -22,6 +22,8 @@ import Monopoly from "./projects/monopoly/pages"
 import TicTacToe from "./projects/tic_tack_toe/pages"
 import EtherealQuest from "./projects/ethereal_quest/pages"
 import SoundHaven from "./projects/sound_haven/pages"
+import Asteroids from "./projects/astroids/pages"
+import CodeChallenge from "./projects/code_challeng"
 
 const queryClient = new QueryClient();
 
@@ -36,8 +38,10 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/games" element={<Games />} />
+          <Route path="/asteroids" element={<Asteroids />} />
           <Route path="/checkers" element={<Checkers />} />
           <Route path="/chess" element={<Chess />} />
+          <Route path="/code_challenge" element={<CodeChallenge />} />
           <Route path="/dominion" element={<Dominion />} />
           <Route path="/eq" element={<EtherealQuest />} />
           <Route path="/farkle" element={<Farkle />} />
