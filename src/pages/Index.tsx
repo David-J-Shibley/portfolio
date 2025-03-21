@@ -434,6 +434,24 @@ const Index = () => {
         />
         <SoundCloudPlayer 
           soundCloudUsername="a_udio-i_llusion" 
+          playlistUrl="https://soundcloud.com/a_udio-i_llusion/sets/golden-hour"
+          height={300}
+          visual={true}
+        />
+        <SoundCloudPlayer 
+          soundCloudUsername="a_udio-i_llusion" 
+          playlistUrl="https://soundcloud.com/a_udio-i_llusion/sets/lovable-lullabies"
+          height={300}
+          visual={true}
+        />
+        <SoundCloudPlayer 
+          soundCloudUsername="a_udio-i_llusion" 
+          playlistUrl="https://soundcloud.com/a_udio-i_llusion/sets/rise-and-shine"
+          height={300}
+          visual={true}
+        />
+        <SoundCloudPlayer 
+          soundCloudUsername="a_udio-i_llusion" 
           playlistUrl="https://soundcloud.com/a_udio-i_llusion/sets/best-rappers-unalive"
           height={300}
           visual={true}

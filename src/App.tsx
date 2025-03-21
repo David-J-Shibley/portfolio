@@ -21,6 +21,7 @@ import Invaders from "./projects/invaders/pages"
 import Monopoly from "./projects/monopoly/pages"
 import TicTacToe from "./projects/tic_tack_toe/pages"
 import EtherealQuest from "./projects/ethereal_quest/pages"
+import SoundHaven from "./projects/sound_haven/pages"
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/monopoly" element={<Monopoly />} />
           <Route path="/rps" element={<RPS />} />
           <Route path="/snake" element={<Snake />} />
+          <Route path="/sound_haven" element={<SoundHaven />} />
           <Route path="/ttt" element={<TicTacToe />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

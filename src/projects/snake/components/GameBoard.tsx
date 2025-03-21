@@ -63,7 +63,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   return (
     <div 
       ref={boardRef} 
-      className="game-grid aspect-square w-full max-w-[500px] relative"
+      className="snake-game-grid aspect-square w-full max-w-[500px] relative"
     >
       {renderCells()}
       
