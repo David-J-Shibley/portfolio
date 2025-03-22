@@ -63,6 +63,11 @@ const games = [
     id: 12,
     title: "Code Challenge",
     url: "/code_challenge"
+  },
+  {
+    id: 13,
+    title: "RPG",
+    url: "/rpg"
   }
 ];
 

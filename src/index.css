@@ -260,4 +260,10 @@
     }
   }
   
-  
+  .bg-background {
+    padding: 50px;
+    
+    @media (max-width: 700px) {
+      padding: none
+    }
+  }

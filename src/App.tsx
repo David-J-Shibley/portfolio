@@ -24,6 +24,7 @@ import EtherealQuest from "./projects/ethereal_quest/pages"
 import SoundHaven from "./projects/sound_haven/pages"
 import Asteroids from "./projects/astroids/pages"
 import CodeChallenge from "./projects/code_challeng"
+import RPG from "./projects/rpg"
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/invaders" element={<Invaders />} />
           <Route path="/memory" element={<Memory />} />
           <Route path="/monopoly" element={<Monopoly />} />
+          <Route path="/rpg" element={<RPG />} />
           <Route path="/rps" element={<RPS />} />
           <Route path="/snake" element={<Snake />} />
           <Route path="/sound_haven" element={<SoundHaven />} />

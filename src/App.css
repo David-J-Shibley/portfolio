@@ -40,3 +40,10 @@
   .read-the-docs {
     color: #888;
   }
+
+  .bg-background {
+    padding: 100px;
+    @media (max-width: 700px) {
+      padding: none
+    }
+  }
