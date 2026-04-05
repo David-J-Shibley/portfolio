@@ -48,6 +48,7 @@ import CrazyEights from "./projects/crazy_eights/pages";
 import Holdem from "./projects/holdem/pages";
 import TowerDefense from "./projects/tower_defense/pages";
 import Connections from "./projects/connections/pages";
+import Mahjong from "./projects/mahjong/pages";
 
 const queryClient = new QueryClient();
 
@@ -105,6 +106,7 @@ const App = () => (
                 <Route path="/holdem" element={<Holdem />} />
                 <Route path="/tower-defense" element={<TowerDefense />} />
                 <Route path="/connections" element={<Connections />} />
+                <Route path="/mahjong" element={<Mahjong />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

@@ -1,0 +1,8 @@
+# docker-compose.prod.yml
+services:
+  web:
+    image: arn:aws:ec2:us-east-2:437481622214:instance/i-03b4bd272f0173131
+    ports:
+      - "8080:8080"
+    env_file: .env
+    restart: unless-stopped
