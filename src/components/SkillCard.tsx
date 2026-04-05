@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 import '../index.css'
@@ -17,22 +17,30 @@ interface SkillCardProps {
 }
 
 const SkillCard = ({ skill, index, }: SkillCardProps) => {
+  const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+      transition={{
+        duration: reduceMotion ? 0 : 0.4,
+        delay: reduceMotion ? 0 : index * 0.05,
+      }}
       viewport={{ once: true, margin: "-50px" }}
-      className="p-5 rounded-xl border bg-card hover:shadow-md transition-all duration-300"
+      className="min-w-0 h-full p-5 rounded-xl border bg-card hover:shadow-md transition-all duration-300"
     >
-      <div className="flex items-center gap-3 mb-4">
-        <div className={cn(
-          "flex items-center justify-center w-10 h-10 rounded-lg",
-          skill.color || "bg-primary/10"
-        )}>
+      <div className="flex items-start gap-3 mb-4 min-w-0">
+        <div
+          className={cn(
+            "flex shrink-0 items-center justify-center w-10 h-10 rounded-lg",
+            skill.color || "bg-primary/10",
+          )}
+        >
           {skill.icon}
         </div>
-        <h3 className="font-medium">{skill.name}</h3>
+        <h3 className="min-w-0 flex-1 font-medium text-sm leading-snug sm:text-base break-words">
+          {skill.name}
+        </h3>
       </div>
       
       <div className="h-2 bg-secondary rounded-full overflow-hidden">
@@ -41,9 +49,12 @@ const SkillCard = ({ skill, index, }: SkillCardProps) => {
             "h-full", 
             skill.color ? `${skill.color}` : "bg-primary"
           )}
-          initial={{ width: 0 }}
+          initial={reduceMotion ? false : { width: 0 }}
           whileInView={{ width: `${skill.level}%` }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.8,
+            delay: reduceMotion ? 0 : 0.2,
+          }}
           viewport={{ once: true }}
         />
       </div>

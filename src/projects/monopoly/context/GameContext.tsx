@@ -3,6 +3,17 @@ import { BOARD_SPACES, CHANCE_CARDS, COMMUNITY_CARDS, PROPERTIES } from '../data
 import { GameState, GameAction, Player, PlayerToken, PlayerStatus, PropertyStatus } from '../types/game';
 import { useToast } from '@/components/ui/use-toast';
 
+const PLAYER_COLORS = [
+  "#e6194b", // red
+  "#3cb44b", // green
+  "#ffe119", // yellow
+  "#4363d8", // blue
+  "#f58231", // orange
+  "#911eb4", // purple
+  "#46f0f0", // cyan
+  "#f032e6", // magenta
+];
+
 // Shuffle an array (Fisher-Yates algorithm)
 const shuffleArray = <T,>(array: T[]): T[] => {
   const newArray = [...array];
@@ -32,7 +43,13 @@ const initialState: GameState = {
   lastRoll: null,
   winner: null,
   turnCount: 0,
-  logs: ['Game started']
+  logs: ['Game started'],
+  auctionActive: false,
+  auctionPropertyId: null,
+  auctionBids: [],
+  auctionCurrentBid: 0,
+  auctionCurrentBidder: null,
+  auctionPassed: [],
 };
 
 // Game reducer
@@ -45,6 +62,10 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       const tokens: PlayerToken[] = ['car', 'shoe', 'hat', 'dog', 'ship', 'iron', 'thimble', 'wheelbarrow'];
       const availableTokens = tokens.filter(token => token !== playerToken);
       
+      // Assign colors
+      const colorPool = [...PLAYER_COLORS];
+      const humanColor = colorPool.shift()!;
+      
       // Create human player
       const humanPlayer: Player = {
         id: 0,
@@ -56,7 +77,8 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         status: 'playing',
         properties: [],
         getOutOfJailCards: 0,
-        isAI: false
+        isAI: false,
+        color: humanColor,
       };
       
       // Create AI players
@@ -64,6 +86,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       for (let i = 0; i < numAiPlayers; i++) {
         const tokenIndex = Math.floor(Math.random() * availableTokens.length);
         const aiToken = availableTokens.splice(tokenIndex, 1)[0];
+        const aiColor = colorPool.shift() || "#888";
         
         aiPlayers.push({
           id: i + 1,
@@ -75,7 +98,8 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
           status: 'playing',
           properties: [],
           getOutOfJailCards: 0,
-          isAI: true
+          isAI: true,
+          color: aiColor,
         });
       }
       
@@ -388,6 +412,33 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
     }
     
     case 'DECLINE_PROPERTY': {
+      // Find the property to auction
+      const currentPlayer = state.players.find(p => p.id === state.currentPlayerId);
+      const currentSpace = state.boardSpaces.find(space => space.position === currentPlayer?.position);
+      let propertyId: number | null = null;
+      if (
+        currentSpace &&
+        (currentSpace.type === 'property' || currentSpace.type === 'railroad' || currentSpace.type === 'utility') &&
+        currentSpace.propertyId !== undefined
+      ) {
+        propertyId = currentSpace.propertyId;
+      }
+      if (propertyId !== null) {
+        // Start auction
+        const activePlayers = state.players.filter(p => p.status !== 'bankrupt');
+        return {
+          ...state,
+          auctionActive: true,
+          auctionPropertyId: propertyId,
+          auctionBids: activePlayers.map(p => ({ playerId: p.id, bid: 0, active: true })),
+          auctionCurrentBid: 0,
+          auctionCurrentBidder: activePlayers[0].id,
+          auctionPassed: [],
+          gamePhase: 'auction',
+          logs: [...state.logs, `Auction started for property ${propertyId}`],
+        };
+      }
+      // fallback: no property found, just end turn
       return {
         ...state,
         gamePhase: 'end-turn',
@@ -566,6 +617,96 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       return initialState;
     }
     
+    case 'AUCTION_BID': {
+      const { bid } = action.payload;
+      if (!state.auctionActive || state.gamePhase !== 'auction' || state.auctionPropertyId == null) return state;
+      // Update the current bidder's bid
+      const updatedBids = (state.auctionBids || []).map(b =>
+        b.playerId === state.auctionCurrentBidder ? { ...b, bid, active: true } : b
+      );
+      // Next active bidder
+      const activeBidders = updatedBids.filter(b => b.active);
+      let nextBidderIdx = activeBidders.findIndex(b => b.playerId === state.auctionCurrentBidder);
+      nextBidderIdx = (nextBidderIdx + 1) % activeBidders.length;
+      const nextBidderId = activeBidders[nextBidderIdx].playerId;
+      // If only one active bidder remains, award property
+      if (activeBidders.length === 1) {
+        const winnerId = activeBidders[0].playerId;
+        const winningBid = activeBidders[0].bid;
+        // Update property and player
+        const updatedProperties = state.properties.map(p =>
+          p.id === state.auctionPropertyId ? { ...p, status: 'owned' as PropertyStatus, owner: winnerId } : p
+        );
+        const updatedPlayers = state.players.map(p =>
+          p.id === winnerId ? { ...p, money: p.money - winningBid, properties: [...p.properties, state.auctionPropertyId!] } : p
+        );
+        return {
+          ...state,
+          properties: updatedProperties,
+          players: updatedPlayers,
+          auctionActive: false,
+          auctionPropertyId: null,
+          auctionBids: [],
+          auctionCurrentBid: 0,
+          auctionCurrentBidder: null,
+          auctionPassed: [],
+          gamePhase: 'end-turn',
+          logs: [...state.logs, `Auction won by ${updatedPlayers.find(p => p.id === winnerId)?.name} for $${winningBid}`],
+        };
+      }
+      return {
+        ...state,
+        auctionBids: updatedBids,
+        auctionCurrentBid: bid,
+        auctionCurrentBidder: nextBidderId,
+        logs: [...state.logs, `${state.players.find(p => p.id === state.auctionCurrentBidder)?.name} bid $${bid}`],
+      };
+    }
+    case 'AUCTION_PASS': {
+      if (!state.auctionActive || state.gamePhase !== 'auction' || state.auctionPropertyId == null) return state;
+      // Mark current bidder as inactive
+      const updatedBids = (state.auctionBids || []).map(b =>
+        b.playerId === state.auctionCurrentBidder ? { ...b, active: false } : b
+      );
+      // Next active bidder
+      const activeBidders = updatedBids.filter(b => b.active);
+      // If only one active bidder remains, award property
+      if (activeBidders.length === 1) {
+        const winnerId = activeBidders[0].playerId;
+        const winningBid = activeBidders[0].bid;
+        // Update property and player
+        const updatedProperties = state.properties.map(p =>
+          p.id === state.auctionPropertyId ? { ...p, status: 'owned' as PropertyStatus, owner: winnerId } : p
+        );
+        const updatedPlayers = state.players.map(p =>
+          p.id === winnerId ? { ...p, money: p.money - winningBid, properties: [...p.properties, state.auctionPropertyId!] } : p
+        );
+        return {
+          ...state,
+          properties: updatedProperties,
+          players: updatedPlayers,
+          auctionActive: false,
+          auctionPropertyId: null,
+          auctionBids: [],
+          auctionCurrentBid: 0,
+          auctionCurrentBidder: null,
+          auctionPassed: [],
+          gamePhase: 'end-turn',
+          logs: [...state.logs, `Auction won by ${updatedPlayers.find(p => p.id === winnerId)?.name} for $${winningBid}`],
+        };
+      }
+      // Find next active bidder
+      const currentIdx = activeBidders.findIndex(b => b.playerId === state.auctionCurrentBidder);
+      const nextBidderIdx = (currentIdx + 1) % activeBidders.length;
+      const nextBidderId = activeBidders[nextBidderIdx].playerId;
+      return {
+        ...state,
+        auctionBids: updatedBids,
+        auctionCurrentBidder: nextBidderId,
+        logs: [...state.logs, `${state.players.find(p => p.id === state.auctionCurrentBidder)?.name} passed`],
+      };
+    }
+    
     default:
       return state;
   }
@@ -631,7 +772,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     // Handle AI player turns automatically
     const handleAiTurn = () => {
       const currentPlayer = state.players.find(p => p.id === state.currentPlayerId);
-      
+      // AI logic for normal turns
       if (currentPlayer && currentPlayer.isAI && state.winner === null) {
         if (state.gamePhase === 'roll') {
           setTimeout(() => {
@@ -651,10 +792,30 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           }, 1000);
         }
       }
+      // AI logic for auction
+      if (state.gamePhase === 'auction' && state.auctionActive && state.auctionCurrentBidder != null) {
+        const aiBidder = state.players.find(p => p.id === state.auctionCurrentBidder);
+        if (aiBidder && aiBidder.isAI) {
+          // Simple AI: bid if current bid is less than 70% of property price and AI has enough money, else pass
+          const property = state.properties.find(p => p.id === state.auctionPropertyId);
+          if (property) {
+            const maxBid = Math.floor(property.price * 0.7);
+            const nextBid = (state.auctionCurrentBid || 0) + 10;
+            if (nextBid <= maxBid && nextBid <= aiBidder.money) {
+              setTimeout(() => {
+                dispatch({ type: 'AUCTION_BID', payload: { bid: nextBid } });
+              }, 1000);
+            } else {
+              setTimeout(() => {
+                dispatch({ type: 'AUCTION_PASS' });
+              }, 1000);
+            }
+          }
+        }
+      }
     };
-    
     handleAiTurn();
-  }, [state.currentPlayerId, state.gamePhase, state.winner, state.players]);
+  }, [state.currentPlayerId, state.gamePhase, state.winner, state.players, state.auctionActive, state.auctionCurrentBidder, state.auctionCurrentBid, state.auctionPropertyId, state.properties]);
 
   // Show toast notifications for important events
   React.useEffect(() => {
@@ -677,6 +838,19 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       }
     }
   }, [state.logs, toast]);
+
+  React.useEffect(() => {
+    const currentPlayer = state.players.find(p => p.id === state.currentPlayerId);
+    if (
+      currentPlayer &&
+      !currentPlayer.isAI &&
+      state.gamePhase === 'move'
+    ) {
+      setTimeout(() => {
+        dispatch({ type: 'MOVE_PLAYER' });
+      }, 500);
+    }
+  }, [state.currentPlayerId, state.gamePhase, state.players]);
 
   return (
     <GameContext.Provider value={{ state, dispatch }}>

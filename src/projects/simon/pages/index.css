@@ -1,0 +1,81 @@
+.simon-shell {
+  --simon-r: hsl(0 72% 48%);
+  --simon-g: hsl(142 58% 38%);
+  --simon-b: hsl(217 82% 48%);
+  --simon-y: hsl(48 96% 48%);
+}
+
+/* width: 100% so 1fr columns get real space (otherwise grid shrink-wraps to ~0). */
+.simon-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: min(100%, 28rem);
+  min-height: 0;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  padding: clamp(0.65rem, 3vw, 1.1rem);
+  border-radius: 9999px;
+  background: hsl(var(--foreground) / 0.12);
+  box-shadow:
+    inset 0 2px 12px hsl(0 0% 0% / 0.2),
+    0 8px 32px hsl(0 0% 0% / 0.15);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.simon-pad {
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  border-radius: clamp(0.75rem, 3vw, 1.25rem);
+  cursor: pointer;
+  transition:
+    filter 0.08s ease,
+    transform 0.08s ease;
+}
+
+.simon-pad:disabled {
+  cursor: not-allowed;
+  opacity: 0.92;
+}
+
+.simon-pad:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.simon-pad--0 {
+  background: linear-gradient(145deg, hsl(142 55% 46%), var(--simon-g));
+  border-bottom: 3px solid hsl(142 60% 22%);
+}
+.simon-pad--1 {
+  background: linear-gradient(145deg, hsl(0 75% 52%), var(--simon-r));
+  border-bottom: 3px solid hsl(0 70% 28%);
+}
+.simon-pad--2 {
+  background: linear-gradient(145deg, hsl(48 98% 54%), var(--simon-y));
+  border-bottom: 3px solid hsl(38 90% 32%);
+}
+.simon-pad--3 {
+  background: linear-gradient(145deg, hsl(217 88% 55%), var(--simon-b));
+  border-bottom: 3px solid hsl(217 70% 28%);
+}
+
+.simon-pad--lit,
+.simon-pad--0.simon-pad--lit {
+  filter: brightness(1.35) saturate(1.1);
+  box-shadow: 0 0 1.5rem hsl(0 0% 100% / 0.35);
+}
+
+.simon-board-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 30rem;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}

@@ -1,0 +1,93 @@
+.cf-root {
+  --cf-board: hsl(215 55% 28%);
+  --cf-slot: hsl(215 40% 18%);
+}
+
+/* Block + explicit width so 1fr columns don’t collapse (minmax(0,1fr) + inline-flex = ~0 width). */
+.cf-board-wrap {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  background: linear-gradient(
+    180deg,
+    hsl(215 50% 32%) 0%,
+    var(--cf-board) 100%
+  );
+  box-shadow:
+    0 4px 0 hsl(215 50% 18%),
+    0 8px 24px hsl(0 0% 0% / 0.25);
+}
+
+.cf-columns {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: 100%;
+  gap: 0.25rem;
+}
+
+.cf-col-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 0.35rem;
+  transition: background-color 0.12s ease;
+}
+
+.cf-col-btn:hover:not(:disabled) {
+  background: hsl(0 0% 100% / 0.08);
+}
+
+.cf-col-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.cf-cell {
+  aspect-ratio: 1;
+  width: 100%;
+  min-height: 0;
+  border-radius: 9999px;
+  background: var(--cf-slot);
+  box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.35);
+}
+
+.cf-disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  box-shadow:
+    inset 0 -3px 6px hsl(0 0% 0% / 0.2),
+    0 1px 2px hsl(0 0% 0% / 0.15);
+}
+
+.cf-disc--1 {
+  background: radial-gradient(
+    circle at 30% 30%,
+    hsl(0 75% 58%),
+    hsl(0 70% 42%) 60%
+  );
+}
+
+.cf-disc--2 {
+  background: radial-gradient(
+    circle at 30% 30%,
+    hsl(48 96% 58%),
+    hsl(43 90% 42%) 60%
+  );
+}
+
+.cf-preview .cf-disc--1,
+.cf-preview .cf-disc--2 {
+  opacity: 0.45;
+}
+

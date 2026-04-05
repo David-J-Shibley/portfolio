@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Home } from "lucide-react";
+import { PageMeta } from "@/components/PageMeta";
 
 const NotFound = () => {
   const location = useLocation();
@@ -15,6 +16,8 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
+    <>
+      <PageMeta title="Page not found" description="This page does not exist." />
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
       <motion.div 
         className="glass-card max-w-md w-full p-8 text-center"
@@ -51,6 +54,7 @@ const NotFound = () => {
         </motion.a>
       </motion.div>
     </div>
+    </>
   );
 };
 

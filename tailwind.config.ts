@@ -66,13 +66,25 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-                chess: {
+				chess: {
 					'light-square': '#f0d9b5',
 					'dark-square': '#b58863',
 					'highlight': 'rgba(255, 255, 0, 0.5)',
 					'last-move': 'rgba(0, 128, 128, 0.5)',
 					'possible-move': 'rgba(0, 0, 0, 0.2)'
-				}
+				},
+				monopoly: {
+					brown: '#6B4423',
+					lightBlue: '#7EB6D9',
+					pink: '#B957A8',
+					orange: '#E67E22',
+					red: '#C0392B',
+					yellow: '#D4AC0D',
+					green: '#1E8449',
+					darkBlue: '#1B4F72',
+					railroad: '#4B5563',
+					utility: '#6B7280',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -154,5 +166,10 @@ export default {
             },
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+	safelist: [
+		{
+			pattern: /(col|row)-(start|span)-[1-9]|10|11/,
+		},
+	],
 } satisfies Config;

@@ -1,10 +1,16 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowDown, Linkedin, Github, Mail, FileText, ExternalLink, Code, Server, Database, Palette } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowDown, Linkedin, Github, Mail, FileText, ExternalLink, Code, Server, Database } from 'lucide-react';
 
-import Navigation from '@/components/Navigation';
+import { PageMeta } from '@/components/PageMeta';
 import Section, { SectionHeader } from '@/components/Section';
-import ProjectCard, { Project } from '@/components/ProjectCard';
+import ProjectCard from '@/components/ProjectCard';
+import { NowStrip } from '@/components/NowStrip';
+import { SkillsCareerTimeline } from '@/components/SkillsCareerTimeline';
+import { DeepDiveSection } from '@/components/DeepDiveSection';
+import { getFeaturedProjects } from '@/data/projects';
+import { heroBio } from '@/data/portfolioContext';
 import SkillCard, { Skill } from '@/components/SkillCard';
 import ResumeSection from '@/components/ResumeSection';
 import SoundCloudPlayer from '@/components/SoundcloudPlayer';
@@ -12,113 +18,6 @@ import ContactForm from '@/components/ContactForm';
 import Logo from '@/components/Logo';
 import Drawings from '@/components/Drawings';
 import { Button } from '@/components/ui/button';
-
-const projects: Project[] = [
-  {
-    id: "1",
-    title: "Chess",
-    description: "A game of checkers built with modern web technologies",
-    longDescription: "A fully functional checkers game with a clean UI, built using Vite, TypeScript, Motion for animations, and Tailwind CSS for styling.",
-    image: "https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?auto=format&fit=crop&w=800&q=80",
-    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
-    github: "https://github.com/David-Shibley",
-    demo: '/chess',
-    date: "2025",
-    features: [
-      "Complete checkers game logic implementation",
-      "Smooth animations with Motion",
-      "Responsive UI with Tailwind CSS",
-      "TypeScript for type safety and better developer experience"
-    ]
-  },
-  {
-    id: "2",
-    title: "Checkers",
-    description: "A game of checkers built with modern web technologies",
-    longDescription: "A fully functional checkers game with a clean UI, built using Vite, TypeScript, Motion for animations, and Tailwind CSS for styling.",
-    image: "https://www.chesshouse.com/cdn/shop/products/red-black-wood-checkers-set-28291362979927.jpg?v=1628162519&width=2048",
-    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
-    github: "https://github.com/David-Shibley",
-    demo: '/checkers',
-    date: "2025",
-    features: [
-      "Complete checkers game logic implementation",
-      "Smooth animations with Motion",
-      "Responsive UI with Tailwind CSS",
-      "TypeScript for type safety and better developer experience"
-    ]
-  },  {
-    id: "3",
-    title: "Farkle",
-    description: "An implementation of the game Farkle",
-    longDescription: "Built a simple interpretation of the game Farkle.",
-    image: "https://imgs.michaels.com/MAM/assets/1/5E3C12034D34434F8A9BAAFDDF0F8E1B/img/9B3D02DD8E294806A6E654C783147154/D327701S_1.jpg",
-    tags: ["TypeScript", "Vite", "Motion", "Tailwind CSS"],
-    github: "https://github.com/David-Shibley",
-    demo: "/farkle",
-    date: "2025",
-    features: [
-      "Comprehensive set of reusable UI components",
-      "Consistent design language across applications",
-      "Accessibility compliance",
-      "Extensive documentation and examples"
-    ]
-  },
-  {
-    id: "4",
-    title: "Daily Site Runner",
-    description: "Conveniently opens sites you use everyday",
-    longDescription: "A practical tool that helps you open your frequently visited websites with a single click, saving time and streamlining your daily workflow.",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
-    tags: ["React", "JavaScript", "Material-UI", "SCSS"],
-    github: "https://github.com/David-Shibley",
-    demo: "https://david-shibley.github.io/",
-    date: "2022",
-    team: "Solo Project",
-    features: [
-      "Customizable site list for quick access",
-      "One-click launch of multiple websites",
-      "User-friendly interface with Material-UI components",
-      "Responsive design for all devices"
-    ]
-  },
-  {
-    id: "5",
-    title: "Royal Oaks Services",
-    description: "Volunteered to build a website for a non-profit organization",
-    longDescription: "A website built for a non-profit organization to help them establish an online presence and better serve their community.",
-    image: "https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=800&q=80",
-    tags: ["React", "JavaScript", "Material-UI", "SCSS"],
-    github: "https://github.com/David-Shibley",
-    demo: "https://royaloaksservices.github.io/",
-    date: "2022",
-    team: "Solo Project",
-    features: [
-      "Information about the organization and its services",
-      "Contact form for inquiries",
-      "Responsive design for all devices",
-      "Easy-to-update content management for non-technical staff"
-    ]
-  },
-  {
-    id: "6",
-    title: "Enterprise Integrations & Shopify Fulfillment",
-    description: "Lead engineer for GoPuff's platform as a service (PaaS) initiative",
-    longDescription: "Converted GoPuff from an ecommerce site into a platform as a service, generating close to $150 million in the first year.",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
-    tags: ["TypeScript", "React", "Node", "Redis", "Azure", "Docker"],
-    github: "https://github.com/David-Shibley",
-    date: "2021 - 2022",
-    team: "Tech Lead (Team of 5)",
-    demo: "https://www.poweredbygopuff.com/pages/fulfillment",
-    features: [
-      "Custom OpenTelemetry implementation with Datadog for business insights",
-      "Integration with major e-commerce platforms",
-      "Shopify fulfillment application",
-      "Real-time monitoring and alerts via PagerDuty"
-    ]
-  }
-];
 
 const frontendSkills: Skill[] = [
   { 
@@ -246,8 +145,25 @@ const images = [
   ];
 
 const Index = () => {
+  const location = useLocation();
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.slice(1);
+    requestAnimationFrame(() => {
+      document
+        .getElementById(id)
+        ?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  }, [location.hash, reduceMotion]);
+
+  const featured = getFeaturedProjects();
+
   return (
-    <main className="bg-background relative overflow-hidden">      
+    <>
+      <PageMeta title="David Shibley — Full Stack Developer" path="/" />
+    <div className="bg-background relative overflow-hidden">      
       {/* Hero Section */}
       <Section id="home" className="min-h-screen flex items-center pt-32 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -258,9 +174,9 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.5 }}
             >
               <span className="caption inline-block px-4 py-1 border rounded-full mb-6">
                 Hello, my name is
@@ -269,24 +185,28 @@ const Index = () => {
                 <span className="block">David Shibley</span>
                 <span className="text-muted-foreground">Full Stack Developer</span>
               </h1>
+              <NowStrip />
               <p className="body-lg text-muted-foreground mb-8 max-w-md">
-                I create elegant, robust web applications with a focus on user experience. As a seasoned developer with experience at Contentful, PrimeTrust, GoPuff, and Broadcom, I bring creative solutions to complex problems.
+                {heroBio}
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <motion.a
-                  href="#projects"
-                  className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
+                <motion.div
+                  whileHover={reduceMotion ? undefined : { scale: 1.03 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
                 >
-                  View My Work
-                </motion.a>
+                  <Link
+                    to="/projects"
+                    className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    View all projects
+                  </Link>
+                </motion.div>
                 <motion.a
                   href="#contact"
-                  className="px-6 py-3 border rounded-lg hover:bg-secondary transition-all"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="inline-block px-6 py-3 border rounded-lg hover:bg-secondary transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  whileHover={reduceMotion ? undefined : { scale: 1.03 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
                 >
                   Contact Me
                 </motion.a>
@@ -297,7 +217,7 @@ const Index = () => {
                   href="https://linkedin.com/in/davidshibley" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <Linkedin size={20} />
                 </a>
@@ -305,13 +225,13 @@ const Index = () => {
                   href="https://github.com/David-Shibley" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <Github size={20} />
                 </a>
                 <a 
                   href="mailto:davidjshibley@gmail.com" 
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <Mail size={20} />
                 </a>
@@ -319,7 +239,7 @@ const Index = () => {
                   href="https://twitch.tv" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <ExternalLink size={20} />
                 </a>
@@ -328,23 +248,23 @@ const Index = () => {
           </div>
           
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
+            animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+            transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.2 }}
             className="relative mx-auto"
           >
             <div className="w-80 h-80 md:w-96 md:h-96 glass-card rounded-full flex items-center justify-center">
               <Logo size="lg" className="w-32 h-32" />
             </div>
-            <div className="absolute inset-0 border-2 border-primary/10 rounded-full animate-spin-slow" />
+            <div className="absolute inset-0 border-2 border-primary/10 rounded-full animate-spin-slow motion-reduce:animate-none" />
           </motion.div>
         </div>
         
         <motion.a
           href="#projects"
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 w-10 h-10 flex items-center justify-center rounded-full border"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 w-10 h-10 flex items-center justify-center rounded-full border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          animate={reduceMotion ? undefined : { y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: reduceMotion ? 0 : Infinity }}
         >
           <ArrowDown size={20} />
         </motion.a>
@@ -354,19 +274,48 @@ const Index = () => {
       <Section id="projects">
         <SectionHeader
           eyebrow="My Work"
-          title="Recent Projects"
-          description="A showcase of my latest web development projects, from enterprise solutions to personal projects."
+          title="Recent projects"
+          description="A curated slice of what I ship — games, web apps, and platform work. Filter and browse everything on the projects page."
         />
         
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {featured.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
+        <p className="text-center mt-10">
+          <Link
+            to="/projects"
+            className="inline-flex items-center text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            View all projects with filters
+          </Link>
+          {" · "}
+          <Link
+            to="/case-studies"
+            className="inline-flex items-center text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            Read case studies
+          </Link>
+        </p>
       </Section>
+
+      <Section id="career-timeline" className="bg-secondary/20">
+        <SectionHeader
+          eyebrow="Journey"
+          title="Interactive career timeline"
+          description="Each era maps to the tools and problems I owned — expand a stop to see the skills heatmap for that chapter."
+        />
+        <SkillsCareerTimeline />
+      </Section>
+
       <Section id='games'>
         <SectionHeader eyebrow='My Work continued' title='Games' description='A list of games I built' />
-        <motion.a href='/games'><Button>See Games</Button></motion.a>
+        <motion.div whileHover={reduceMotion ? undefined : { scale: 1.02 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
+          <Button asChild>
+            <Link to="/games">See Games</Link>
+          </Button>
+        </motion.div>
       </Section>
       
       {/* Skills Section */}
@@ -377,34 +326,44 @@ const Index = () => {
           description="I specialize in modern web technologies and frameworks, with experience across the full development stack."
         />
         
-        <div className="grid md:grid-cols-3 gap-12">
-          <div>
+        {/* xl: three equal columns; below xl stack categories full-width with 2-col cards so labels aren’t crushed */}
+        <div className="grid grid-cols-1 gap-10 xl:grid-cols-3 xl:gap-8">
+          <div className="min-w-0">
             <h3 className="heading-sm mb-6">Frontend Development</h3>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-1">
               {frontendSkills.map((skill, index) => (
                 <SkillCard key={skill.name} skill={skill} index={index} />
               ))}
             </div>
           </div>
-          
-          <div>
+
+          <div className="min-w-0">
             <h3 className="heading-sm mb-6">Backend Development</h3>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-1">
               {backendSkills.map((skill, index) => (
                 <SkillCard key={skill.name} skill={skill} index={index + frontendSkills.length} />
               ))}
             </div>
           </div>
-          
-          <div>
+
+          <div className="min-w-0">
             <h3 className="heading-sm mb-6">DevOps & Tools</h3>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-1">
               {devopsSkills.map((skill, index) => (
                 <SkillCard key={skill.name} skill={skill} index={index + frontendSkills.length + backendSkills.length} />
               ))}
             </div>
           </div>
         </div>
+      </Section>
+
+      <Section id="deep-dive">
+        <SectionHeader
+          eyebrow="Under the hood"
+          title="Deep dive: browser Monopoly"
+          description="One representative build where game rules, UI modals, and shared state have to stay honest together."
+        />
+        <DeepDiveSection />
       </Section>
       
       {/* Resume Section */}
@@ -534,7 +493,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </main>
+    </div>
+    </>
   );
 };
 

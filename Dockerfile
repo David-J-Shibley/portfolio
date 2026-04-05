@@ -1,44 +1,36 @@
-# Use the Node alpine official image
-# https://hub.docker.com/_/node
-FROM node:lts-alpine AS build
+# syntax=docker/dockerfile:1
 
-# Set config
-ENV NPM_CONFIG_UPDATE_NOTIFIER=false
-ENV NPM_CONFIG_FUND=false
-ENV VITE_TESTING_SOMETHING='something'
-ENV VITE_EMAIL_TEMPLATE_ID='template_0inbwf3'
-ENV VITE_EMAIL_PUBLIC_KEY='XPwXLjTBqhog4y2iK'
-ENV VITE_EMAIL_SERVICE_ID='service_nbmus3r'
+FROM node:22-alpine AS builder
 
-# Create and change to the app directory.
 WORKDIR /app
 
-# Copy the files to the container image
-COPY package*.json ./
-
-# Install packages
+COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy local code to the container image.
-COPY . ./
+COPY . .
+RUN npm run build:docker
 
-# Build the app.
-RUN npm run build
+FROM node:22-alpine AS runner
 
-# Use the Caddy image
-FROM caddy
-
-# Create and change to the app directory.
 WORKDIR /app
 
-# Copy Caddyfile to the container image.
-COPY Caddyfile ./
+ENV NODE_ENV=production
+ENV PORT=8080
 
-# Copy local code to the container image.
-RUN caddy fmt Caddyfile --overwrite
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 --ingroup nodejs appuser
 
-# Copy files to the container image.
-COPY --from=build /app/dist ./dist
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
 
-# Use Caddy to run/serve the app
-CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
+COPY --from=builder --chown=appuser:nodejs /app/dist ./dist
+COPY --from=builder --chown=appuser:nodejs /app/dist-server.mjs ./dist-server.mjs
+
+USER appuser
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD node -e "fetch('http://127.0.0.1:8080/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+CMD ["node", "dist-server.mjs"]

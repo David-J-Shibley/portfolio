@@ -1,0 +1,16 @@
+.dino-drop-grid {
+  display: grid;
+  gap: 2px;
+  background: #e6d3b3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #bfa76a;
+  box-shadow: 0 4px 24px #bfa76a33;
+}
+.dino-drop-cell {
+  width: 32px;
+  height: 32px;
+  border-radius: 2px;
+  background: #f5e9da;
+  border: 1px solid #d1bfa3;
+} 

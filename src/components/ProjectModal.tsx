@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Github, ExternalLink } from 'lucide-react';
@@ -11,6 +12,7 @@ interface ProjectModalProps {
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     const modalRef = useRef<HTMLDivElement>(null);
+    const demoInternal = project.demo?.startsWith("/") ?? false;
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -84,12 +86,21 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                 <Github size={18} /> GitHub
               </a>
             )}
-            {project.demo && (
+            {project.demo && demoInternal && (
+              <Link
+                to={project.demo}
+                onClick={onClose}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <ExternalLink size={18} /> Open demo
+              </Link>
+            )}
+            {project.demo && !demoInternal && (
               <a
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-600 transition"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <ExternalLink size={18} /> Live Demo
               </a>

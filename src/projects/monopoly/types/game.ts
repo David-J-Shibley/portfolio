@@ -56,6 +56,13 @@ export interface Player {
   properties: number[];
   getOutOfJailCards: number;
   isAI: boolean;
+  color: string;
+}
+
+export interface AuctionBid {
+  playerId: number;
+  bid: number;
+  active: boolean;
 }
 
 export interface GameState {
@@ -67,11 +74,18 @@ export interface GameState {
   currentPlayerId: number;
   dice: [number, number];
   doubleRollCount: number;
-  gamePhase: 'roll' | 'move' | 'action' | 'end-turn';
+  gamePhase: 'roll' | 'move' | 'action' | 'end-turn' | 'auction';
   lastRoll: [number, number] | null;
   winner: number | null;
   turnCount: number;
   logs: string[];
+  // Auction state
+  auctionActive?: boolean;
+  auctionPropertyId?: number | null;
+  auctionBids?: AuctionBid[];
+  auctionCurrentBid?: number;
+  auctionCurrentBidder?: number | null;
+  auctionPassed?: number[];
 }
 
 export interface GameAction {

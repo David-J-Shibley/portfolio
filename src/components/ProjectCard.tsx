@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronRight, Github, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import ProjectModal from './ProjectModal';
 
 import '../index.css'
+
+export type ProjectKind = "game" | "web" | "professional";
 
 export interface Project {
   id: string;
@@ -18,6 +21,10 @@ export interface Project {
   team?: string;
   demo?: string;
   features: string[];
+  /** For filtering on /projects */
+  kind: ProjectKind;
+  /** Shown on the home “Recent projects” strip */
+  featuredOnHome?: boolean;
 }
 
 interface ProjectCardProps {
@@ -27,13 +34,18 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const demoIsInternal = project.demo?.startsWith("/") ?? false;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={{
+        duration: reduceMotion ? 0 : 0.5,
+        delay: reduceMotion ? 0 : index * 0.1,
+      }}
       viewport={{ once: true, margin: "-100px" }}
       className={cn(
         "group relative overflow-hidden rounded-2xl border transition-all duration-400",
@@ -70,8 +82,8 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         <div className="flex items-center justify-between pt-2">
           <motion.button
             onClick={() => setShowModal(true)}
-            className="flex items-center text-sm font-medium"
-            whileHover={{ x: 5 }}
+            className="flex items-center text-sm font-medium rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            whileHover={reduceMotion ? undefined : { x: 5 }}
           >
             View details <ChevronRight size={16} className="ml-1" />
           </motion.button>
@@ -82,18 +94,27 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
                 href={project.github} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                className="p-2 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label="View GitHub repository"
               >
                 <Github size={18} />
               </a>
             )}
-            {project.demo && (
+            {project.demo && demoIsInternal && (
+              <Link
+                to={project.demo}
+                className="p-2 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 inline-flex"
+                aria-label="Open demo"
+              >
+                <ExternalLink size={18} />
+              </Link>
+            )}
+            {project.demo && !demoIsInternal && (
               <a 
                 href={project.demo} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                className="p-2 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label="View live demo"
               >
                 <ExternalLink size={18} />
