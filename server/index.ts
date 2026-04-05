@@ -16,6 +16,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = Number(process.env.PORT) || 8080;
 
+/** Set TRUST_PROXY=1 when running behind nginx / ALB so req.ip and secure cookies behave. */
+if (process.env.TRUST_PROXY === "1") {
+  app.set("trust proxy", 1);
+}
+
 app.disable("x-powered-by");
 app.use(express.json({ limit: "256kb" }));
 
