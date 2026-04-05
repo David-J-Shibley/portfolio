@@ -36,6 +36,7 @@ import {
   Club,
   Diamond,
   Castle,
+  Link2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageMeta } from "@/components/PageMeta";
@@ -84,6 +85,7 @@ const games: GameEntry[] = [
   { id: 30, title: "Crazy Eights", url: "/crazy-eights", Icon: Club, category: "Cards" },
   { id: 31, title: "Texas Hold'em", url: "/holdem", Icon: Diamond, category: "Cards" },
   { id: 32, title: "Tower Defense", url: "/tower-defense", Icon: Castle, category: "Arcade" },
+  { id: 33, title: "Connections", url: "/connections", Icon: Link2, category: "Word" },
 ];
 
 const iconTones = [
