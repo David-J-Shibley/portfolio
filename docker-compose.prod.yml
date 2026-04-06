@@ -1,8 +1,15 @@
-# docker-compose.prod.yml
+# Production-style compose: publish app on HOST_PORT (default 8080).
+# For TLS inside Docker, use docker-compose.https.yml instead (Caddy on 80/443).
+
 services:
   web:
-    image: arn:aws:ec2:us-east-2:437481622214:instance/i-03b4bd272f0173131
+    build: .
     ports:
-      - "8080:8080"
+      - "${HOST_PORT:-8080}:8080"
     env_file: .env
+    environment:
+      PORT: "8080"
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY:-}
+      FEATHERLESS_MODEL: ${FEATHERLESS_MODEL:-}
     restart: unless-stopped

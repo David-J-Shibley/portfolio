@@ -1,0 +1,10 @@
+# Caddy terminates TLS and proxies to the Node app (service name `web`, port 8080).
+#
+# Set CADDY_DOMAIN to your public hostname (e.g. portfolio.shibleyrecords.com).
+# Ports 80 and 443 must be published on the host. Caddy obtains/renews Let's Encrypt certs automatically.
+#
+# Local try: CADDY_DOMAIN=localhost (Caddy uses an internal certificate for HTTPS on localhost).
+
+{$CADDY_DOMAIN} {
+	reverse_proxy web:8080
+}

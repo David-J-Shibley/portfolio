@@ -71,7 +71,56 @@ Open `https://YOUR_DOMAIN` (no port in the URL).
 
 ---
 
+## Certificate saved but “Could not install certificate”
+
+Certbot issued the cert but **no nginx `server` block** had a matching `server_name`. The name in nginx must **exactly match** what you passed to `-d` (e.g. `shibleyrecords.com`, not `YOUR_DOMAIN` or a different subdomain).
+
+**Fix**
+
+1. Edit your site config (path varies):
+
+   ```bash
+   sudo nano /etc/nginx/conf.d/portfolio.conf
+   # or: /etc/nginx/sites-available/portfolio
+   ```
+
+2. Set **`server_name`** to the same hostname you certified, for example:
+
+   ```nginx
+   server_name shibleyrecords.com www.shibleyrecords.com;
+   ```
+
+   (Omit `www` if you did not request it in Certbot.)
+
+3. Test and reload:
+
+   ```bash
+   sudo nginx -t && sudo systemctl reload nginx
+   ```
+
+4. Let Certbot wire TLS into that block:
+
+   ```bash
+   sudo certbot install --cert-name shibleyrecords.com
+   ```
+
+**Manual HTTPS block** (if `certbot install` still fails): add a second `server` listening on **443** with the same `proxy_pass` as port 80, and:
+
+```nginx
+listen 443 ssl;
+listen [::]:443 ssl;
+ssl_certificate     /etc/letsencrypt/live/shibleyrecords.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/shibleyrecords.com/privkey.pem;
+include /etc/letsencrypt/options-ssl-nginx.conf;
+ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+```
+
+If `ssl-dhparams.pem` is missing, run `sudo certbot renew --dry-run` once (Certbot often creates it) or comment out the `ssl_dhparam` line temporarily. Then add on the **port 80** `server` a redirect to HTTPS, keeping `location /.well-known/acme-challenge/` **before** the redirect so renewals work.
+
+---
+
 ### Alternatives
 
-- **Caddy**: single binary, automatic HTTPS; Caddyfile with `reverse_proxy 127.0.0.1:8080`.
+- **Docker**: use **`docker-compose.https.yml`** in this repo — a **Caddy** container terminates TLS and proxies to the **`web`** service (Let’s Encrypt when `CADDY_DOMAIN` is a public hostname). Do not run host nginx on 80/443 at the same time.
+- **Caddy on the host**: same idea as Docker, `reverse_proxy 127.0.0.1:8080`.
 - **AWS Application Load Balancer + ACM**: certificate in AWS, targets on 8080; no Certbot on the instance.
