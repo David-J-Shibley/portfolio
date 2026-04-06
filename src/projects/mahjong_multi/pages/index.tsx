@@ -13,46 +13,29 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import {
+  MahjongTileFace,
+  mahjongTileAriaLabel,
+} from "../components/MahjongTile";
+import {
   discardTile,
   drawFromWall,
   initialState,
   SEAT_NAMES,
   type GameState,
 } from "../lib/gameEngine";
-import { tileLabel } from "../lib/tileSet";
 
-function tileButtonClasses(tile: number): string {
-  if (tile < 9)
-    return "border-emerald-800/70 bg-gradient-to-b from-emerald-950/90 via-emerald-900/85 to-emerald-950/95 text-emerald-50";
-  if (tile < 18)
-    return "border-rose-800/70 bg-gradient-to-b from-rose-950/90 via-rose-900/85 to-rose-950/95 text-rose-50";
-  if (tile < 27)
-    return "border-sky-800/70 bg-gradient-to-b from-sky-950/90 via-sky-900/85 to-sky-950/95 text-sky-50";
-  return "border-slate-700/80 bg-gradient-to-b from-slate-900/95 via-slate-800/90 to-slate-900/95 text-slate-100";
-}
-
-function TileFace({ tile }: { tile: number }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex min-h-[2.5rem] min-w-[2rem] items-center justify-center rounded-md border-2 border-b-[3px] px-1.5 text-[0.7rem] font-bold tabular-nums shadow-sm",
-        tileButtonClasses(tile),
-      )}
-      aria-hidden
-    >
-      {tileLabel(tile)}
-    </span>
-  );
-}
+const SEAT_COMPASS = ["E", "S", "W", "N"] as const;
 
 function SeatBlock({
   title,
+  compass,
   handCount,
   isTurn,
   accent,
   children,
 }: {
   title: string;
+  compass: string;
   handCount: number;
   isTurn: boolean;
   accent?: "draw" | "discard";
@@ -63,25 +46,35 @@ function SeatBlock({
       className={cn(
         "rounded-2xl border p-3 shadow-sm transition-colors",
         isTurn
-          ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
-          : "border-border bg-card/80",
+          ? "border-primary/45 bg-primary/[0.07] ring-2 ring-primary/15"
+          : "border-border/80 bg-card/90 backdrop-blur-[2px]",
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-semibold text-foreground">{title}</p>
-        <span className="text-xs tabular-nums text-muted-foreground">
+        <div className="flex items-center gap-2 min-w-0">
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-muted/60 text-xs font-bold tabular-nums text-muted-foreground"
+            aria-hidden
+          >
+            {compass}
+          </span>
+          <p className="truncate text-sm font-semibold text-foreground">
+            {title}
+          </p>
+        </div>
+        <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
           {handCount} tiles
         </span>
       </div>
       {accent && (
-        <p className="mt-1 text-xs font-medium text-primary">
-          {accent === "draw" ? "Draw from wall" : "Discard one tile"}
+        <p className="mt-2 text-center text-xs font-semibold text-primary sm:text-left">
+          {accent === "draw" ? "Draw from the wall" : "Tap a tile to discard"}
         </p>
       )}
       {children ? (
         <div className="mt-3">{children}</div>
       ) : (
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 text-center text-xs text-muted-foreground sm:text-left">
           Pass the device when it is this seat&apos;s turn.
         </p>
       )}
@@ -121,13 +114,13 @@ export default function MahjongMultiPage() {
   ] as const;
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-background px-4 pb-16 pt-24 text-foreground md:pt-28">
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-emerald-950/[0.06] via-background to-background px-4 pb-16 pt-24 text-foreground md:pt-28">
       <PageMeta
         title="Mahjong (4-player)"
         description="Local four-player mahjong — draw, discard, tsumo and ron with a simplified winning hand."
         path="/mahjong-multi"
       />
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
         <header className="flex flex-wrap items-center justify-between gap-3">
           <Button variant="ghost" size="sm" asChild className="-ml-2 gap-1">
             <Link to="/games">
@@ -147,129 +140,170 @@ export default function MahjongMultiPage() {
               Mahjong
             </h1>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Hot-seat for four: same device, pass when the turn changes. Standard
-            shape win only (four melds + pair); no chi/pon/kan or scoring.
+          <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground">
+            Hot-seat for four on one device. Win with a standard hand (four
+            melds + one pair). Tsumo and ron are supported; chi, pon, kan, and
+            scoring are not.
           </p>
         </div>
 
         <p
-          className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-center text-sm"
+          className="rounded-xl border border-border bg-card/70 px-4 py-3 text-center text-sm font-medium shadow-sm"
           role="status"
         >
           {state.phase.type === "finished"
-            ? "Hand over — see dialog or start a new game."
+            ? "Hand over — see the dialog or start a new game."
             : state.phase.type === "must_discard"
               ? `${SEAT_NAMES[state.phase.player]} must discard.`
-              : `${SEAT_NAMES[state.phase.player]} draws next (${state.wall.length} left in wall).`}
+              : `${SEAT_NAMES[state.phase.player]} draws next — ${state.wall.length} tiles left in the wall.`}
         </p>
 
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-stretch">
-          {seatOrder.map((slot) => {
-            if (slot.seat === -1) {
-              return (
-                <div
-                  key="center"
-                  className={cn(
-                    "flex flex-col justify-center gap-3 rounded-2xl border border-border bg-muted/20 p-4",
-                    slot.grid,
-                  )}
-                >
-                  <div className="text-center">
-                    <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      Wall
-                    </p>
-                    <p className="text-2xl font-semibold tabular-nums">
-                      {state.wall.length}
-                    </p>
-                  </div>
-                  {state.lastDiscard && (
-                    <div className="text-center">
-                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                        Last discard
-                      </p>
-                      <div className="mt-2 flex justify-center">
-                        <TileFace tile={state.lastDiscard.tile} />
+        <div
+          className={cn(
+            "rounded-3xl border border-emerald-900/10 bg-emerald-950/[0.04] p-3 shadow-inner md:p-4",
+            "dark:border-emerald-950/40 dark:bg-emerald-950/20",
+          )}
+        >
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-stretch">
+            {seatOrder.map((slot) => {
+              if (slot.seat === -1) {
+                return (
+                  <div
+                    key="center"
+                    className={cn(
+                      "flex flex-col justify-center gap-4 rounded-2xl border border-border/70 bg-card/85 p-4 shadow-sm",
+                      slot.grid,
+                    )}
+                  >
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
+                      <div className="rounded-xl bg-muted/50 px-3 py-3 text-center">
+                        <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground">
+                          Wall
+                        </p>
+                        <p className="mt-1 text-3xl font-bold tabular-nums tracking-tight text-foreground">
+                          {state.wall.length}
+                        </p>
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {SEAT_NAMES[state.lastDiscard.player]}
-                      </p>
+                      <div className="rounded-xl bg-muted/50 px-3 py-3 text-center">
+                        <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground">
+                          Discards
+                        </p>
+                        <p className="mt-1 text-3xl font-bold tabular-nums tracking-tight text-foreground">
+                          {state.discards.length}
+                        </p>
+                      </div>
                     </div>
-                  )}
-                  <div>
-                    <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      Discard pool
-                    </p>
-                    <div className="mt-2 flex max-h-24 flex-wrap justify-center gap-1 overflow-y-auto">
-                      {state.discards.map((d, i) => (
-                        <TileFace key={`${d.player}-${i}-${d.tile}`} tile={d.tile} />
-                      ))}
+                    {state.lastDiscard && (
+                      <div className="rounded-xl border border-dashed border-border bg-background/60 px-3 py-3 text-center">
+                        <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground">
+                          Last discard
+                        </p>
+                        <div className="mt-2 flex justify-center">
+                          <MahjongTileFace
+                            tile={state.lastDiscard.tile}
+                            size="lg"
+                          />
+                        </div>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          From {SEAT_NAMES[state.lastDiscard.player]}
+                        </p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-center text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground">
+                        Discard pool
+                      </p>
+                      {state.discards.length === 0 ? (
+                        <p className="mt-3 text-center text-xs text-muted-foreground">
+                          No discards yet.
+                        </p>
+                      ) : (
+                        <div
+                          className="mt-2 flex max-w-full gap-1.5 overflow-x-auto overflow-y-hidden pb-1 pt-0.5 [scrollbar-width:thin]"
+                          style={{ WebkitOverflowScrolling: "touch" }}
+                        >
+                          {state.discards.map((d, i) => (
+                            <MahjongTileFace
+                              key={`${d.player}-${i}-${d.tile}`}
+                              tile={d.tile}
+                              size="sm"
+                              className="shrink-0"
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
+                );
+              }
+
+              const s = slot.seat;
+              const count = state.hands[s]!.length;
+              const isTurn =
+                state.phase.type !== "finished" && state.phase.player === s;
+              const showDiscard =
+                state.phase.type === "must_discard" &&
+                state.phase.player === s;
+              const showDraw =
+                state.phase.type === "ready_to_draw" &&
+                state.phase.player === s;
+
+              return (
+                <div key={s} className={slot.grid}>
+                  <SeatBlock
+                    title={slot.label}
+                    compass={SEAT_COMPASS[s]}
+                    handCount={count}
+                    isTurn={!!isTurn}
+                    accent={
+                      showDiscard ? "discard" : showDraw ? "draw" : undefined
+                    }
+                  >
+                    {showDiscard && (
+                      <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+                        {state.hands[s]!.map((tile, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            className={cn(
+                              "rounded-xl transition-transform hover:scale-[1.04] active:scale-[0.98]",
+                              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                              "disabled:opacity-50",
+                            )}
+                            onClick={() =>
+                              setState((prev) => discardTile(prev, idx))
+                            }
+                            aria-label={`Discard ${mahjongTileAriaLabel(tile)}`}
+                          >
+                            <MahjongTileFace tile={tile} size="lg" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {showDraw && (
+                      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                        <Button
+                          type="button"
+                          size="lg"
+                          className="min-w-[10rem] font-semibold"
+                          onClick={() =>
+                            setState((prev) => drawFromWall(prev))
+                          }
+                        >
+                          Draw tile
+                        </Button>
+                      </div>
+                    )}
+                  </SeatBlock>
                 </div>
               );
-            }
-
-            const s = slot.seat;
-            const count = state.hands[s]!.length;
-            const isTurn =
-              state.phase.type !== "finished" && state.phase.player === s;
-            const showDiscard =
-              state.phase.type === "must_discard" && state.phase.player === s;
-            const showDraw =
-              state.phase.type === "ready_to_draw" && state.phase.player === s;
-
-            return (
-              <div key={s} className={slot.grid}>
-                <SeatBlock
-                  title={slot.label}
-                  handCount={count}
-                  isTurn={!!isTurn}
-                  accent={
-                    showDiscard ? "discard" : showDraw ? "draw" : undefined
-                  }
-                >
-                  {showDiscard && (
-                    <div className="flex flex-wrap justify-center gap-1.5">
-                      {state.hands[s]!.map((tile, idx) => (
-                        <button
-                          key={`${tile}-${idx}`}
-                          type="button"
-                          className={cn(
-                            "rounded-md border-2 border-transparent transition-transform hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                            "disabled:opacity-50",
-                          )}
-                          onClick={() =>
-                            setState((prev) => discardTile(prev, idx))
-                          }
-                          aria-label={`Discard ${tileLabel(tile)}`}
-                        >
-                          <TileFace tile={tile} />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {showDraw && (
-                    <div className="flex justify-center">
-                      <Button
-                        type="button"
-                        onClick={() =>
-                          setState((prev) => drawFromWall(prev))
-                        }
-                      >
-                        Draw tile
-                      </Button>
-                    </div>
-                  )}
-                </SeatBlock>
-              </div>
-            );
-          })}
+            })}
+          </div>
         </div>
 
         <p className="text-center text-xs text-muted-foreground">
-          Dealer is East (starts with 14 tiles). Turn order: East → South →
-          West → North.
+          Dealer is East (14 tiles to start). Turn order: East → South → West →
+          North. Compass badges match seat winds.
         </p>
       </div>
 
@@ -280,7 +314,11 @@ export default function MahjongMultiPage() {
             <DialogDescription>{resultMessage(state)}</DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button type="button" variant="secondary" onClick={() => setEndOpen(false)}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setEndOpen(false)}
+            >
               Close
             </Button>
             <Button type="button" onClick={newGame}>

@@ -17,6 +17,49 @@ export function tileLabel(idx: number): string {
   return "Rd";
 }
 
+export type TileTone = "bamboo" | "character" | "dot" | "honor";
+
+/** Short category + main glyph for on-tile layout. */
+export function tileFaceParts(idx: number): {
+  category: string;
+  main: string;
+  tone: TileTone;
+} {
+  if (idx < 0 || idx >= TILE_TYPES) {
+    return { category: "", main: "?", tone: "honor" };
+  }
+  if (idx < 9) {
+    return { category: "Bamboo", main: String(idx + 1), tone: "bamboo" };
+  }
+  if (idx < 18) {
+    return { category: "Chars", main: String(idx - 8), tone: "character" };
+  }
+  if (idx < 27) {
+    return { category: "Dots", main: String(idx - 17), tone: "dot" };
+  }
+  const winds = ["East", "South", "West", "North"] as const;
+  if (idx < 31) {
+    return { category: "Wind", main: winds[idx - 27]!, tone: "honor" };
+  }
+  const dragons = ["White", "Green", "Red"] as const;
+  return { category: "Dragon", main: dragons[idx - 31]!, tone: "honor" };
+}
+
+/** Spoken label for buttons / screen readers. */
+export function tileAriaDescription(idx: number): string {
+  if (idx < 0 || idx >= TILE_TYPES) return "Unknown tile";
+  if (idx < 9) return `${idx + 1} of bamboo`;
+  if (idx < 18) return `${idx - 8} of characters`;
+  if (idx < 27) return `${idx - 17} of dots`;
+  if (idx === 27) return "East wind";
+  if (idx === 28) return "South wind";
+  if (idx === 29) return "West wind";
+  if (idx === 30) return "North wind";
+  if (idx === 31) return "White dragon";
+  if (idx === 32) return "Green dragon";
+  return "Red dragon";
+}
+
 export function createWall(): number[] {
   const wall: number[] = [];
   for (let t = 0; t < TILE_TYPES; t++) {
