@@ -49,6 +49,7 @@ import Holdem from "./projects/holdem/pages";
 import TowerDefense from "./projects/tower_defense/pages";
 import Connections from "./projects/connections/pages";
 import Mahjong from "./projects/mahjong/pages";
+import MahjongMulti from "./projects/mahjong_multi/pages";
 
 const queryClient = new QueryClient();
 
@@ -107,6 +108,7 @@ const App = () => (
                 <Route path="/tower-defense" element={<TowerDefense />} />
                 <Route path="/connections" element={<Connections />} />
                 <Route path="/mahjong" element={<Mahjong />} />
+                <Route path="/mahjong-multi" element={<MahjongMulti />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

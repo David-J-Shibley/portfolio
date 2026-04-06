@@ -3,6 +3,10 @@ import { pairDeck } from "./tiles";
 import type { BoardTile, TileKind } from "./types";
 import { isTileFree } from "./rules";
 
+export function cloneBoard(tiles: BoardTile[]): BoardTile[] {
+  return tiles.map((t) => ({ ...t }));
+}
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
